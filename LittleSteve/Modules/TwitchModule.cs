@@ -75,7 +75,7 @@ namespace LittleSteve.Modules
                     .WithFooter($"Live for {timeLive.Humanize(2, maxUnit: TimeUnit.Hour, minUnit: TimeUnit.Second)}")
                     .Build();
                 
-                await ReplyAsync("Go Here: https://www.destiny.gg/bigscreen ", embed: embed);
+                await ReplyAsync($"{twitch.AlternateStreamLink ?? string.Empty}", embed: embed);
             }
         }
 
@@ -83,7 +83,7 @@ namespace LittleSteve.Modules
         [RequireOwnerOrAdmin]
         [Summary("Add twitch channel to follow in a specified channel")]
         [Remarks("?twitch add destiny #destinyhub")]
-        public async Task AddTwitch(string twitchName, IGuildChannel guildChannel)
+        public async Task AddTwitch(string twitchName, IGuildChannel guildChannel, string alternateLink )
         {
             var userResponse = await _twitchService.GetUserByNameAsync(twitchName);
 
@@ -102,6 +102,7 @@ namespace LittleSteve.Modules
                 {
                     Id = long.Parse(userResponse.Id),
                     Name = userResponse.DisplayName,
+                    AlternateStreamLink = alternateLink,
                     TwitchAlertSubscriptions = new List<TwitchAlertSubscription>()
                 };
                 _botContext.TwitchStreamers.Add(user);

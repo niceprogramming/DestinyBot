@@ -10,7 +10,7 @@ namespace LittleSteve.Data.Entities
         public string Name { get; set; }
         public DateTimeOffset SteamStartTime { get; set; }
         public DateTimeOffset StreamEndTime { get; set; }
-
+        public string AlternateStreamLink { get; set; }
         [NotMapped] public TimeSpan StreamLength => StreamEndTime - SteamStartTime;
         public ICollection<Game> Games { get; set; }
         public ICollection<TwitchAlertSubscription> TwitchAlertSubscriptions { get; set; }

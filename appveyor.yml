@@ -1,17 +1,15 @@
 version: '1.0.{build}'
-image: Visual Studio 2017
+image: ubuntu
 configuration: Release
 platform: Any CPU
 pull_requests:
   do_not_increment_build_number: true
 before_build:
-  # Display .NET Core version
-  - cmd: dotnet --version
+# Display .NET Core version
   
-  - cmd: dotnet restore ./LittleSteve/LittleSteve.csproj
+  - ps: dotnet restore ./LittleSteve/LittleSteve.csproj
 build_script:
-
-  - cmd: dotnet publish -c Release
+  - ps: dotnet publish -c Release
 test: off  
 artifacts:
 - path: './LittleSteve/bin/Release/netcoreapp2.0/publish'
