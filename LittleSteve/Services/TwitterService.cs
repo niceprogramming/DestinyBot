@@ -16,11 +16,6 @@ namespace LittleSteve.Services
             _token = Tokens.Create(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         }
 
-        public TwitterService(TwitterTokens tokens) : this(tokens.ConsumerKey, tokens.ConsumerSecret,
-            tokens.AccessToken, tokens.AccessTokenSecret)
-        {
-        }
-
         public async Task<Status> GetLatestTweetForUserAsync(long userId) =>
             (await _token.Statuses.UserTimelineAsync(userId, 1)).Single();
 

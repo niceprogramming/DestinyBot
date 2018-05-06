@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,10 +42,11 @@ namespace LittleSteve
             });
 
             _config = BuildConfig();
+            
             _services = ConfigureServices();
 
-
             Log.Information("Data {@data}", _config.Get<BotConfig>());
+
         }
 
         private void SetupJobs()
@@ -92,18 +94,12 @@ namespace LittleSteve
         public async Task StartAsync()
         {
             _client.Log += BotLogHook.Log;
-            _client.Ready += async () =>
-            {
-                await _client.SetGameAsync("?help");
-                
-              
-                
-            };
+            _client.Ready += async () => { await _client.SetGameAsync("?help"); };
 
             await _client.LoginAsync(TokenType.Bot, _config.Get<BotConfig>().DiscordToken);
 
             await _client.StartAsync();
-            
+
             await _services.GetRequiredService<CommandHandlingService>().InitializeAsync(_services);
             SetupJobs();
             await Task.Delay(-1);
@@ -119,7 +115,7 @@ namespace LittleSteve
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<BlacklistService>()
                 .AddSingleton(new ImgurService(config.ImgurClientId))
-                .AddSingleton(new TwitterService(config.TwitterTokens))
+                .AddSingleton(new TwitterService(config.TwitterConsumerKey,config.TwitterConsumerSecret,config.TwitterAccessToken,config.TwitterAccessTokenSecret))
                 .AddSingleton(new TwitchService(config.TwitchClientId))
                 .AddSingleton<FerretService>()
                 .AddSingleton<InteractiveService>()
@@ -127,15 +123,18 @@ namespace LittleSteve
                 .Configure<BotConfig>(_config)
 
                 //We delegate the config object so we dont have to use IOptionsSnapshot or IOptions in our code
-                .AddTransient(provider => provider.GetRequiredService<IOptionsMonitor<BotConfig>>().CurrentValue)
+                .AddTransient(provider => provider.GetRequiredService<IOptions<BotConfig>>())
                 .AddOptions()
                 .AddDbContext<SteveBotContext>(opt => opt.UseNpgsql(config.ConnectionString),
                     ServiceLifetime.Transient)
                 .BuildServiceProvider();
         }
 
-        private IConfiguration BuildConfig() => new ConfigurationBuilder()
-            .AddJsonFile("config.json", false, true)
-            .Build();
+        private IConfiguration BuildConfig()
+        {
+            return new ConfigurationBuilder()
+                .AddEnvironmentVariables("@")
+                .Build();
+        }
     }
 }

@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LittleSteve.Data", "LittleS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{99849E5E-9200-4437-BDDE-A6EF0000A5D1}"
 	ProjectSection(SolutionItems) = preProject
+		AddEnvironmentVariables.ps1 = AddEnvironmentVariables.ps1
 		appveyor.yml = appveyor.yml
 	EndProjectSection
 EndProject
