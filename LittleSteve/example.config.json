@@ -13,7 +13,8 @@
   "DiscordToken": "",
   "ImgurClientId": "",
   
-  "ImgurAlbumId": "",
+  "AslanAlbumId": "",
+  "RMSAlbumId": "",
   "ThrottleLength": "",
   "Prefix": ""
 

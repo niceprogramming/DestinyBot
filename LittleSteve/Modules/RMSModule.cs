@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Discord.Commands;
@@ -9,30 +9,30 @@ using LittleSteve.Services;
 
 namespace LittleSteve.Modules
 {
-    [Name("Aslan")]
-    public class AslanModule : ModuleBase<SteveBotCommandContext>
+    [Name("RMS")]
+    public class RMSModule : ModuleBase<SteveBotCommandContext>
     {
         private readonly HttpClient _client;
         private readonly BotConfig _config;
         private readonly ImgurService _imgurService;
 
-        public AslanModule(ImgurService imgurService, BotConfig config, HttpClient client)
+        public RMSModule(ImgurService imgurService, BotConfig config, HttpClient client)
         {
             _imgurService = imgurService;
             _config = config;
             _client = client;
         }
 
-        [Command("aslan", RunMode = RunMode.Async)]
-        [Alias("cat")]
+        [Command("rms", RunMode = RunMode.Async)]
+        [Alias("stallman")]
         [Blacklist]
         [BlockChannels()]
         [ThrottleCommand]
-        [Summary("Get a picture of Aslan")]
-        [Remarks("?aslan Do I look cute today")]
-        public async Task Aslan([Remainder] string question = null)
+        [Summary("Get a picture of Richard Stallman")]
+        [Remarks("?rms What is freedom")]
+        public async Task RMS([Remainder] string question = null)
         {
-            var album = await _imgurService.GetAlbumAsync(_config.AslanAlbumId);
+            var album = await _imgurService.GetAlbumAsync(_config.RMSAlbumId);
 
             var image = album.ImgurData.Images.Random();
 
