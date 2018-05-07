@@ -11,8 +11,8 @@ using System;
 namespace LittleSteve.Data.Migrations
 {
     [DbContext(typeof(SteveBotContext))]
-    [Migration("20180506220314_AlternateStreamLink")]
-    partial class AlternateStreamLink
+    [Migration("20180507140015_AddedStreamMessageForTwitchJob")]
+    partial class AddedStreamMessageForTwitchJob
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,6 +71,8 @@ namespace LittleSteve.Data.Migrations
 
                     b.Property<bool>("ShouldPin");
 
+                    b.Property<string>("StreamMessage");
+
                     b.Property<long>("TwitchStreamerId");
 
                     b.HasKey("Id");
@@ -84,8 +86,6 @@ namespace LittleSteve.Data.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AlternateStreamLink");
 
                     b.Property<string>("Name");
 

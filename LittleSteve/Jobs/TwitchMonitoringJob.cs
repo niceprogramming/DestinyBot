@@ -76,6 +76,7 @@ namespace LittleSteve.Jobs
                     });
                     foreach (var subscription in streamer.TwitchAlertSubscriptions)
                     {
+                       
                         var messageId = CreateTwitchMessage(streamer, stream, subscription).AsSync(false);
                         subscription.MessageId = messageId;
                     }
@@ -177,6 +178,10 @@ namespace LittleSteve.Jobs
             TwitchAlertSubscription subscription)
         {
             var channel = _client.GetChannel((ulong) subscription.DiscordChannelId) as ITextChannel;
+            if (!string.IsNullOrWhiteSpace(subscription.StreamMessage))
+            {
+                await channel.SendMessageAsync(subscription.StreamMessage);
+            }
             var message = await channel.SendMessageAsync(string.Empty, embed: CreateTwitchEmbed(streamer, stream));
             return (long) message.Id;
         }

@@ -10,7 +10,7 @@ namespace LittleSteve.Data
         public SteveBotContext CreateDbContext(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile("config.json")
+                .AddEnvironmentVariables("@")
                 .Build();
             var options = new DbContextOptionsBuilder<SteveBotContext>();
 

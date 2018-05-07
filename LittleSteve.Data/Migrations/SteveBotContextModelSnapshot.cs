@@ -70,6 +70,8 @@ namespace LittleSteve.Data.Migrations
 
                     b.Property<bool>("ShouldPin");
 
+                    b.Property<string>("StreamMessage");
+
                     b.Property<long>("TwitchStreamerId");
 
                     b.HasKey("Id");
@@ -83,8 +85,6 @@ namespace LittleSteve.Data.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AlternateStreamLink");
 
                     b.Property<string>("Name");
 
