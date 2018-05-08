@@ -14,7 +14,8 @@ namespace LittleSteve.Models
         public string DiscordToken { get; set; }
         public string ImgurClientId { get; set; }
         public string DestinyCalendar { get; set; }
-        public string ImgurAlbumId { get; set; }
+        public string AslanAlbumId { get; set; }
+        public string RMSAlbumId { get; set; }
         public string Prefix { get; set; }
         public int ThrottleLength { get; set; }
     }
