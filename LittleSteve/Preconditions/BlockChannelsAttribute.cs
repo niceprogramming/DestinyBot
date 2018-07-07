@@ -18,12 +18,7 @@ namespace LittleSteve.Preconditions
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            if (_channelIds.Contains(context.Channel.Id))
-            {
-                return PreconditionResult.FromError("Channel is blocked");
-            }
-
-            return PreconditionResult.FromSuccess();
+            return _channelIds.Contains(context.Channel.Id) ? PreconditionResult.FromError("Channel is blocked") : PreconditionResult.FromSuccess();
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using TwitchLib;
-using TwitchLib.Models.API.v5.Streams;
-using TwitchLib.Models.API.v5.Users;
+using TwitchLib.Api;
+using TwitchLib.Api.Models.v5.Streams;
+using TwitchLib.Api.Models.v5.Users;
+
 
 namespace LittleSteve.Services
 {
@@ -12,7 +14,8 @@ namespace LittleSteve.Services
 
         public TwitchService(string clientId)
         {
-            _api = new TwitchAPI(clientId);
+            _api = new TwitchAPI();
+            _api.Settings.ClientId = clientId;
         }
 
         public async Task<User> GetUserByNameAsync(string name)

@@ -13,7 +13,8 @@ using LittleSteve.Extensions;
 using LittleSteve.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using TwitchLib.Models.API.v5.Streams;
+using TwitchLib.Api.Models.v5.Streams;
+
 using TimeUnit = Humanizer.Localisation.TimeUnit;
 
 namespace LittleSteve.Jobs
