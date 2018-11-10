@@ -37,6 +37,7 @@ namespace DestinyBot
 
         public async Task StartAsync()
         {
+            _client.Log += BotLogHook.Log;
             await _client.LoginAsync(TokenType.Bot, _config.Get<BotConfig>().DiscordToken);
 
             await _client.StartAsync();
