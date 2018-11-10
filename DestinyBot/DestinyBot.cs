@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using DestinyBot.Models;
+using DestinyBot.Services;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace DestinyBot
 {
@@ -42,6 +45,7 @@ namespace DestinyBot
 
             await _client.StartAsync();
 
+            await _services.GetRequiredService<CommandHandlingService>().InitializeAsync(_services);
             await Task.Delay(-1);
         }
 
@@ -58,7 +62,12 @@ namespace DestinyBot
 
             return new ServiceCollection()
                 .AddSingleton(_client)
+                .AddSingleton<CommandService>()
+                .AddSingleton<CommandHandlingService>()
                 .Configure<BotConfig>(_config)
+
+                //We delegate the config object so we dont have to use IOptionsSnapshot or IOptions in our code
+                .AddTransient(provider => provider.GetRequiredService<IOptions<BotConfig>>().Value)
                 .BuildServiceProvider();
         }
 

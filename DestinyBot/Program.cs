@@ -12,8 +12,17 @@ namespace DestinyBot
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
                 .CreateLogger();
-
-            await new DestinyBot().StartAsync();
+            try
+            {
+                await new DestinyBot().StartAsync();
+            }
+            catch (Exception e)
+            {
+                // How real men prevent errors
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
     }
 }
