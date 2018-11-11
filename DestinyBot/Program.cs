@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DestinyBot.Models;
+using DestinyBot.Services;
 using Serilog;
 
 namespace DestinyBot

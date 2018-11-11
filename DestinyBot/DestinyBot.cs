@@ -20,6 +20,7 @@ namespace DestinyBot
         private readonly DiscordSocketClient _client;
         private readonly IConfiguration _config;
         private readonly IServiceProvider _services;
+
         public DestinyBot()
         {
             _client = new DiscordSocketClient(new DiscordSocketConfig
@@ -66,7 +67,7 @@ namespace DestinyBot
                 .AddSingleton<CommandHandlingService>()
                 .Configure<BotConfig>(_config)
 
-                //We delegate the config object so we dont have to use IOptionsSnapshot or IOptions in our code
+                //We delegate the config object so we dont have to use IOptionsSnapshot<T> or IOptions<T> to get the Config
                 .AddTransient(provider => provider.GetRequiredService<IOptions<BotConfig>>().Value)
                 .BuildServiceProvider();
         }
