@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DestinyBot.Models;
-using DestinyBot.Services;
 using Serilog;
 
 namespace DestinyBot
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
@@ -23,7 +21,6 @@ namespace DestinyBot
                 Console.WriteLine(e);
                 throw;
             }
-            
         }
     }
 }

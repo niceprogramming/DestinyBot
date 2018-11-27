@@ -28,6 +28,7 @@ namespace DestinyBot.Services
                 await _httpClient.GetStringAsync(
                     $"channels?part=snippet,contentDetails&forUsername={user}&key={_apiKey}");
             var json = JsonConvert.DeserializeObject<YoutubeChannelResponse>(response);
+
             return json.YoutubeChannels.FirstOrDefault()?.ContentDetails.RelatedPlaylists.Uploads;
         }
 
@@ -38,6 +39,7 @@ namespace DestinyBot.Services
             {
                 return new List<YoutubeVideo>();
             }
+
             var response =
                 await _httpClient.GetStringAsync(
                     $"playlistItems?part=snippet,contentDetails&playlistId={id}&key={_apiKey}");
@@ -46,6 +48,7 @@ namespace DestinyBot.Services
             return json.YoutubeVideos;
         }
 
-        public async Task<YoutubeVideo> GetLatestVideoAsync(string user) => (await GetVideosForUserAsync(user))?.FirstOrDefault();
+        public async Task<YoutubeVideo> GetLatestVideoAsync(string user) =>
+            (await GetVideosForUserAsync(user))?.FirstOrDefault();
     }
 }

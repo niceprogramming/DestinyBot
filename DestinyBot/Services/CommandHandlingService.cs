@@ -6,7 +6,6 @@ using DestinyBot.Models;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-
 using Serilog;
 
 namespace DestinyBot.Services
@@ -31,8 +30,7 @@ namespace DestinyBot.Services
         public async Task InitializeAsync(IServiceProvider provider)
         {
             _provider = provider;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(),_provider);
-
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
         }
 
         private async Task MessageReceived(SocketMessage rawMessage)

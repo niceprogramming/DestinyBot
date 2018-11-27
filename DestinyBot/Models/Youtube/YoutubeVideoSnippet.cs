@@ -6,7 +6,7 @@ namespace DestinyBot.Models.Youtube
     public class YoutubeVideoSnippet
     {
         [JsonProperty("publishedAt")]
-        public DateTime PublishedAt { get; set; }
+        public DateTimeOffset PublishedAt { get; set; }
 
         [JsonProperty("channelId")]
         public string ChannelId { get; set; }
@@ -25,6 +25,8 @@ namespace DestinyBot.Models.Youtube
 
         [JsonProperty("playlistId")]
         public string PlaylistId { get; set; }
-    }
 
+        [JsonProperty("resourceId")]
+        public ResourceId ResourceId { get; set; }
+    }
 }
