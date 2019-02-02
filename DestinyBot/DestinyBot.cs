@@ -57,21 +57,37 @@ namespace DestinyBot
         private void SetupJobs()
         {
             var registry = new Registry();
+            registry.NonReentrantAsDefault();
             using (var db = _services.GetRequiredService<DestinyBotContext>())
             {
                 db.Database.Migrate();
                 
-                foreach (var subscription in db.YoutubeSubscriptions)
+                foreach (var subscription in db.Channels)
                 {
                     registry.Schedule(() => new YoutubeJob(
-                            subscription.ChannelName,
+                            subscription.Name,
                             _services.GetService<YoutubeService>(),
                             _client,
                             _services.GetService<DestinyBotContext>()))
-                        .WithName(subscription.ChannelName + subscription.DiscordChannelId)
+                        .WithName(subscription.Id)
                         .ToRunNow().AndEvery(5)
-                        .Seconds();
+                        .Minutes();
+
                 }
+
+                foreach (var streamer in db.TwitchStreamers)
+                {
+                    registry.Schedule(() => new TwitchJob(
+                            streamer.Id,
+                            _services.GetService<TwitchService>(),
+                            _services.GetService<DestinyBotContext>(),
+                            _client))
+                        .WithName(streamer.Id.ToString())
+                        .ToRunNow().AndEvery(1)
+                        .Minutes();
+
+                }
+                
             }
             JobManager.Initialize(registry);
             JobManager.JobException += info => Log.Information(info.Exception, "{jobName} has a problem", info.Name);
@@ -92,6 +108,11 @@ namespace DestinyBot
                 .AddSingleton<CommandHandlingService>()
                 .Configure<BotConfig>(_config)
                 .AddSingleton(new YoutubeService(config.YoutubeKey))
+                .AddSingleton(new TwitchService(config.TwitchClientId))
+#if DEBUG
+                .AddLogging(b => b.AddSerilog(dispose: true))
+#endif
+
                 .AddDbContext<DestinyBotContext>(ServiceLifetime.Transient)
                 //We delegate the config object so we dont have to use IOptionsSnapshot<T> or IOptions<T> to get the Config
                 .AddTransient(provider => provider.GetRequiredService<IOptions<BotConfig>>().Value)

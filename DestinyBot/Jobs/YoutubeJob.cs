@@ -11,12 +11,13 @@ using DestinyBot.Models.Youtube;
 using DestinyBot.Services;
 using Discord.WebSocket;
 using FluentScheduler;
+using Microsoft.EntityFrameworkCore;
 
 namespace DestinyBot.Jobs
 {
     public class YoutubeJob : IJob
     {
-        private readonly string _id;
+        
         private readonly string _name;
         private readonly DiscordSocketClient _client;
         private readonly DestinyBotContext _db;
@@ -38,18 +39,17 @@ namespace DestinyBot.Jobs
         {
             using (_db)
             {
-                var subs = _db.YoutubeSubscriptions.Where(x => x.ChannelName == _name);
+                var channel = _db.Channels.Include(x => x.YoutubeSubscriptions).FirstOrDefault(x => x.Name == _name);
                 var video = _youtube.GetLatestVideoAsync(_name).GetAwaiter().GetResult() ?? new YoutubeVideo();
-                if (subs.FirstOrDefault()?.LatestVideoDate >= video.Snippet.PublishedAt.ToUnixTimeSeconds())
+                if (channel?.LatestVideoDate >= video.Snippet.PublishedAt.ToUnixTimeSeconds())
                 {
                     return;
                 }
-
-                foreach (var sub in subs)
+                channel.LatestVideoDate = video.Snippet.PublishedAt.ToUnixTimeSeconds();
+                foreach (var sub in channel.YoutubeSubscriptions)
                 {
-                    var channel = _client.GetChannel(Convert.ToUInt64(sub.DiscordChannelId)) as SocketTextChannel;
-                    channel?.SendMessageAsync(string.Format(YoutubeUrlTemplate, video.Snippet.ResourceId.VideoId));
-                    sub.LatestVideoDate = video.Snippet.PublishedAt.ToUnixTimeSeconds();
+                    var textChannel = _client.GetChannel(Convert.ToUInt64(sub.DiscordChannelId)) as SocketTextChannel;
+                    textChannel?.SendMessageAsync(string.Format(YoutubeUrlTemplate, video.Snippet.ResourceId.VideoId));
                 }
 
                 _db.SaveChanges();

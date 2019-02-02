@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Data.Entities;
 using DestinyBot.Preconditions;
@@ -12,37 +13,57 @@ namespace DestinyBot.Modules
     {
         private readonly DestinyBotContext _db;
         private readonly YoutubeService _youtube;
+        private readonly TwitchService _twitchService;
 
-        public GuildModule(DestinyBotContext db, YoutubeService youtube)
+        public GuildModule(DestinyBotContext db, YoutubeService youtube, TwitchService twitchService)
         {
             _db = db;
             _youtube = youtube;
+            _twitchService = twitchService;
         }
 
-        [RequireOwnerOrAdmin]
+        [RequireOwner]
         [Command("setup", RunMode = RunMode.Async)]
         [Summary("Setup guild with default social media accounts.")]
-        public async Task Setup(ITextChannel channel, string name)
+        public async Task Setup(ITextChannel textChannel, string name)
         {
             var video = await _youtube.GetLatestVideoAsync(name);
+            var user = await _twitchService.GetUserAsync(name);
             var owner = new GuildOwner
             {
-                ChannelHub = channel.Id.ToString(),
-                GuildId = channel.GuildId.ToString(),
+                ChannelHub = textChannel.Id.ToString(),
+                GuildId = textChannel.GuildId.ToString(),
                 Snowflake = Context.Guild.OwnerId.ToString(),
                 YoutubeId = video.Snippet.ChannelId
             };
 
             var youtubeSub = new YoutubeSubscription
             {
-                ChannelId = video.Snippet.ChannelId,
-                ChannelName = video.Snippet.ChannelTitle,
                 DiscordChannelId = owner.ChannelHub,
-                LatestVideoDate = video.Snippet.PublishedAt.ToUnixTimeSeconds()
+            };
+            var channel = new Youtube()
+            {
+                Id = video.Snippet.ChannelId,
+                Name = video.Snippet.ChannelTitle,
+                LatestVideoDate = video.Snippet.PublishedAt.ToUnixTimeSeconds(),
+                YoutubeSubscriptions = new List<YoutubeSubscription>() { youtubeSub}
+            };
+
+            var twitchSub = new TwitchSubscription
+            {
+                DiscordChannelId = owner.ChannelHub,
+                
+            };
+            var streamer = new TwitchStreamer()
+            {
+                Id = user.Id,
+                Name = user.DisplayName,
+                TwitchSubscriptions = new List<TwitchSubscription>() { twitchSub }
             };
 
             _db.Add(owner);
-            _db.Add(youtubeSub);
+            _db.Add(channel);
+            _db.Add(streamer);
 
             await _db.SaveChangesAsync();
         }
