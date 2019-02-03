@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using DestinyBot.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,7 +29,8 @@ namespace DestinyBot.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=bot.db");
+            //Directory.CreateDirectory("destinybot/");
+            optionsBuilder.UseSqlite($"Data Source=bot.db");
             optionsBuilder.UseLoggerFactory(_loggerFactory);
         }
 
