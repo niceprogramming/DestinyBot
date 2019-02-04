@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DestinyBot.Data;
+using DestinyBot.Preconditions;
 using DestinyBot.Services;
 using Discord;
 using Discord.Commands;
@@ -26,6 +27,8 @@ namespace DestinyBot.Modules
             _db = botContext;
         }
 
+        [Command]
+        [ThrottleCommand]
         public async Task Twitch()
         {
             var owner = await _db.GuildOwners.FirstOrDefaultAsync(x => Context.Guild.Id.ToString() == x.GuildId);

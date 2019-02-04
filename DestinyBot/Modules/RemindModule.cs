@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Data.Entities;
+using DestinyBot.Preconditions;
 using DestinyBot.Services;
 using Discord;
 using Discord.Commands;
@@ -21,6 +22,8 @@ namespace DestinyBot.Modules
 
         [Command("reminder")]
         [Alias("rm", "remindme", "remind")]
+        [ThrottleCommand]
+        [RequireOwnerOrAdmin]
         public async Task Reminder(TimeSpan waitTime, [Remainder] string message)
         {
             var reminder = new Reminder

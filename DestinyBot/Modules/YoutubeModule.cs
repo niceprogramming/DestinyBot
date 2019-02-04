@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DestinyBot.Data;
+using DestinyBot.Preconditions;
 using DestinyBot.Services;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace DestinyBot.Modules
         }
 
         [Command]
-        //[ThrottleCommand]
+        [ThrottleCommand]
         public async Task Youtube()
         {
             var owner = await _db.GuildOwners.FirstOrDefaultAsync(x => Context.Guild.Id.ToString() == x.GuildId);
