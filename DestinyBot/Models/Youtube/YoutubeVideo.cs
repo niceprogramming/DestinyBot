@@ -4,6 +4,4 @@
     {
         public YoutubeVideoSnippet Snippet { get; set; }
     }
-
-    
 }

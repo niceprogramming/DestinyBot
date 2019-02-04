@@ -4,7 +4,6 @@ namespace DestinyBot.Models.Youtube
 {
     public class YoutubeChannelContentDetails
     {
-        [JsonProperty("relatedPlaylists")]
-        public RelatedPlaylists RelatedPlaylists { get; set; }
+        [JsonProperty("relatedPlaylists")] public RelatedPlaylists RelatedPlaylists { get; set; }
     }
 }

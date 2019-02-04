@@ -27,7 +27,7 @@ namespace DestinyBot.Services
             _client.MessageReceived += MessageReceived;
         }
 
-        public async Task InitializeAsync(IServiceProvider provider)
+        public async Task StartAsync(IServiceProvider provider)
         {
             _provider = provider;
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
@@ -38,32 +38,21 @@ namespace DestinyBot.Services
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             // Ignore system messages and messages from bots
-            if (!(rawMessage is SocketUserMessage message))
-            {
-                return;
-            }
+            if (!(rawMessage is SocketUserMessage message)) return;
 
-            if (message.Source != MessageSource.User)
-            {
-                return;
-            }
+            if (message.Source != MessageSource.User) return;
 
 
             var argPos = 0;
             if (!(message.HasMentionPrefix(_client.CurrentUser, ref argPos) ||
                   message.HasStringPrefix(_config.Prefix, ref argPos)))
-            {
                 return;
-            }
 
             var context = new SocketCommandContext(_client, message);
 
             var result = await _commands.ExecuteAsync(context, argPos, _provider);
 
-            if (!result.IsSuccess)
-            {
-                Log.Error($"{result.Error}: {result.ErrorReason}");
-            }
+            if (!result.IsSuccess) Log.Error($"{result.Error}: {result.ErrorReason}");
 
             stopwatch.Stop();
             Log.Information($"Took {stopwatch.ElapsedMilliseconds}ms to process: {message}");

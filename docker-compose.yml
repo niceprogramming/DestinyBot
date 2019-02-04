@@ -4,8 +4,10 @@ services:
   destinybot:
     image: destinybot
     restart: on-failure
+    volumes:
+      - ./data:/data
     env_file:
       - ./config.env
     build:
       context: .
-      dockerfile: Dockerfile
+      

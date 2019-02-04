@@ -5,7 +5,6 @@ namespace DestinyBot.Models.Youtube
 {
     public class YoutubePlaylistResponse
     {
-        [JsonProperty("items")]
-        public List<YoutubeVideo> YoutubeVideos { get; set; }
+        [JsonProperty("items")] public List<YoutubeVideo> YoutubeVideos { get; set; }
     }
 }

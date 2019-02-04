@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using DestinyBot.Data.Entities;
 using DestinyBot.Models.Twitch;
 using Newtonsoft.Json;
 
@@ -18,9 +15,9 @@ namespace DestinyBot.Services
         public TwitchService(string apiKey)
         {
             _apiKey = apiKey;
-            _httpClient = new HttpClient()
+            _httpClient = new HttpClient
             {
-                BaseAddress = new Uri("https://api.twitch.tv/helix/"),
+                BaseAddress = new Uri("https://api.twitch.tv/helix/")
             };
             _httpClient.DefaultRequestHeaders.Add("Client-ID", _apiKey);
         }
@@ -53,7 +50,6 @@ namespace DestinyBot.Services
             var data = JsonConvert.DeserializeObject<TwitchGameResponse>(response);
 
             return data.Games.FirstOrDefault();
-
         }
     }
 }

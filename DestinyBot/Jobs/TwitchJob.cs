@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +10,9 @@ using Discord;
 using Discord.WebSocket;
 using FluentScheduler;
 using Humanizer;
-using Humanizer.Localisation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Game = DestinyBot.Data.Entities.Game;
 using TimeUnit = Humanizer.Localisation.TimeUnit;
 
 namespace DestinyBot.Jobs
@@ -21,9 +20,9 @@ namespace DestinyBot.Jobs
     public class TwitchJob : IJob
     {
         private readonly long _channelId;
-        private readonly TwitchService _twitchService;
-        private readonly DestinyBotContext _db;
         private readonly DiscordSocketClient _client;
+        private readonly DestinyBotContext _db;
+        private readonly TwitchService _twitchService;
 
         public TwitchJob(long channelId, TwitchService twitchService, DestinyBotContext db,
             DiscordSocketClient client)
@@ -33,6 +32,7 @@ namespace DestinyBot.Jobs
             _db = db;
             _client = client;
         }
+
         public void Execute()
         {
             using (_db)
@@ -40,19 +40,13 @@ namespace DestinyBot.Jobs
                 var streamer = _db.TwitchStreamers.Include(x => x.TwitchSubscriptions)
                     .Include(x => x.Games)
                     .FirstOrDefault(x => x.Id == _channelId);
-                
-                if (streamer is null)
-                {
-                    return;
-                }
+
+                if (streamer is null) return;
 
                 var isStreaming = _twitchService.IsStreamLiveAsync(streamer.Name).GetAwaiter().GetResult();
 
                 //stream has ended and we are waiting for startup again
-                if (!isStreaming && streamer.StreamLength >= TimeSpan.Zero)
-                {
-                    return;
-                }
+                if (!isStreaming && streamer.StreamLength >= TimeSpan.Zero) return;
                 // stream started
                 if (isStreaming && streamer.StreamLength >= TimeSpan.Zero)
                 {
@@ -60,17 +54,18 @@ namespace DestinyBot.Jobs
 
                     streamer.SteamStartTime = stream.StartedAt.ToUnixTimeSeconds();
                     var game = _twitchService.GetGame(stream.GameId).GetAwaiter().GetResult();
-                    streamer.Games.Add(new Data.Entities.Game()
+                    streamer.Games.Add(new Game
                     {
                         StartTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                         Name = string.IsNullOrWhiteSpace(game.Name) ? "No Game" : game.Name
                     });
                     var logo = _twitchService.GetUserAsync(streamer.Name).GetAwaiter().GetResult()?.ProfileImageUrl;
-                    
+
 
                     foreach (var subscription in streamer.TwitchSubscriptions)
                     {
-                        var messageId = CreateTwitchMessage(streamer, stream, subscription,logo).GetAwaiter().GetResult();
+                        var messageId = CreateTwitchMessage(streamer, stream, subscription, logo).GetAwaiter()
+                            .GetResult();
                         subscription.MessageId = messageId;
                     }
 
@@ -81,12 +76,8 @@ namespace DestinyBot.Jobs
                 // we update the message embed for the already started stream
                 if (isStreaming && streamer.StreamLength <= TimeSpan.Zero)
                 {
-
                     var stream = _twitchService.GetStreamAsync(streamer.Name).GetAwaiter().GetResult();
-                    if (stream is null)
-                    {
-                        return;
-                    }
+                    if (stream is null) return;
                     var game = _twitchService.GetGame(stream.GameId).GetAwaiter().GetResult();
 
                     var oldGame = streamer.Games.LastOrDefault();
@@ -94,7 +85,7 @@ namespace DestinyBot.Jobs
                     if (oldGame != null && oldGame.Name != currentGame)
                     {
                         oldGame.EndTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                        streamer.Games.Add(new Data.Entities.Game()
+                        streamer.Games.Add(new Game
                         {
                             StartTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                             Name = currentGame
@@ -106,23 +97,25 @@ namespace DestinyBot.Jobs
                     {
                         if (subscription.MessageId == 0)
                         {
-                            var messageId = CreateTwitchMessage(streamer, stream, subscription,logo).GetAwaiter().GetResult();
+                            var messageId = CreateTwitchMessage(streamer, stream, subscription, logo).GetAwaiter()
+                                .GetResult();
                             subscription.MessageId = messageId;
                         }
-                        
-                        var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
+
+                        var channel =
+                            _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
                         var message =
-                            channel.GetMessageAsync((ulong)subscription.MessageId).GetAwaiter().GetResult() as IUserMessage;
+                            channel.GetMessageAsync((ulong) subscription.MessageId).GetAwaiter()
+                                .GetResult() as IUserMessage;
                         if (message is null)
                         {
                             Log.Information("Message was not found");
                             return;
                         }
 
-                        message.ModifyAsync(x => x.Embed = CreateTwitchEmbed(streamer, stream,logo)).GetAwaiter().GetResult();
+                        message.ModifyAsync(x => x.Embed = CreateTwitchEmbed(streamer, stream, logo)).GetAwaiter()
+                            .GetResult();
                     }
-
-
                 }
 
                 //stream ended
@@ -134,8 +127,10 @@ namespace DestinyBot.Jobs
                     var user = _twitchService.GetUserAsync(streamer.Name).GetAwaiter().GetResult();
 
                     var description = new StringBuilder();
-                    description.AppendLine($"**Started at:** {DateTimeOffset.FromUnixTimeSeconds(streamer.SteamStartTime):g} UTC");
-                    description.AppendLine($"__**Ended at:** {DateTimeOffset.FromUnixTimeSeconds(streamer.StreamEndTime):g} UTC__");
+                    description.AppendLine(
+                        $"**Started at:** {DateTimeOffset.FromUnixTimeSeconds(streamer.SteamStartTime):g} UTC");
+                    description.AppendLine(
+                        $"__**Ended at:** {DateTimeOffset.FromUnixTimeSeconds(streamer.StreamEndTime):g} UTC__");
 
                     description.AppendLine(
                         $"**Total Time:** {streamer.StreamLength.Humanize(2, maxUnit: TimeUnit.Hour, minUnit: TimeUnit.Minute, collectionSeparator: " ")}");
@@ -145,37 +140,46 @@ namespace DestinyBot.Jobs
                         .WithAuthor($"{streamer.Name} was live", url: $"https://twitch.tv/{streamer.Name}")
                         .WithThumbnailUrl(user.ProfileImageUrl)
                         .WithDescription(description.ToString())
-                        .AddField("Games Played", string.Join("\n", streamer.Games.Where(x => x.StartTime >= streamer.SteamStartTime && x.EndTime <= streamer.StreamEndTime).Select(x => $"**{x.Name}:** Played for {x.PlayLength.Humanize(2, maxUnit: TimeUnit.Hour, minUnit: TimeUnit.Minute, collectionSeparator: " ")}")))
+                        .AddField("Games Played",
+                            string.Join("\n",
+                                streamer.Games
+                                    .Where(x => x.StartTime >= streamer.SteamStartTime &&
+                                                x.EndTime <= streamer.StreamEndTime).Select(x =>
+                                        $"**{x.Name}:** Played for {x.PlayLength.Humanize(2, maxUnit: TimeUnit.Hour, minUnit: TimeUnit.Minute, collectionSeparator: " ")}")))
                         .Build();
 
                     foreach (var subscription in streamer.TwitchSubscriptions)
                     {
-                        var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
+                        var channel =
+                            _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
                         var message =
-                            channel.GetMessageAsync((ulong)subscription.MessageId).GetAwaiter().GetResult() as IUserMessage;
+                            channel.GetMessageAsync((ulong) subscription.MessageId).GetAwaiter()
+                                .GetResult() as IUserMessage;
                         if (message is null)
                         {
                             Log.Information("Message was not found");
-                            return;
+                            continue;
                         }
 
                         message.ModifyAsync(x => x.Embed = embed).GetAwaiter().GetResult();
                     }
-                    _db.SaveChanges();
-
                 }
+
+                _db.SaveChanges();
             }
         }
+
         private async Task<long> CreateTwitchMessage(
-            TwitchStreamer streamer, 
+            TwitchStreamer streamer,
             Stream stream,
             TwitchSubscription subscription,
             string logoUrl)
         {
             var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
 
-            var message = await channel.SendMessageAsync(string.Empty, embed: CreateTwitchEmbed(streamer, stream,logoUrl));
-            return (long)message.Id;
+            var message =
+                await channel.SendMessageAsync(string.Empty, embed: CreateTwitchEmbed(streamer, stream, logoUrl));
+            return (long) message.Id;
         }
 
         private Embed CreateTwitchEmbed(TwitchStreamer streamer, Stream stream, string logoUrl)

@@ -7,6 +7,9 @@ namespace DestinyBot.Modules
     public class UtilityModule : ModuleBase<SocketCommandContext>
     {
         [Command("hello")]
-        public Task Hello() => ReplyAsync($"Hello {Context.User.Mention}");
+        public Task Hello()
+        {
+            return ReplyAsync($"Hello {Context.User.Mention}");
+        }
     }
 }

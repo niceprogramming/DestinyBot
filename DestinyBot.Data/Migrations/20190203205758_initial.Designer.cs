@@ -8,14 +8,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DestinyBot.Data.Migrations
 {
     [DbContext(typeof(DestinyBotContext))]
-    [Migration("20181213023754_initial")]
+    [Migration("20190203205758_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
 
             modelBuilder.Entity("DestinyBot.Data.Entities.Game", b =>
                 {
@@ -55,6 +55,26 @@ namespace DestinyBot.Data.Migrations
                     b.HasKey("GuildId");
 
                     b.ToTable("GuildOwners");
+                });
+
+            modelBuilder.Entity("DestinyBot.Data.Entities.Reminder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("ChannelId");
+
+                    b.Property<long>("DateCreated");
+
+                    b.Property<long>("GuildId");
+
+                    b.Property<string>("Message");
+
+                    b.Property<long>("TimeToRemind");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reminders");
                 });
 
             modelBuilder.Entity("DestinyBot.Data.Entities.TwitchStreamer", b =>

@@ -35,10 +35,7 @@ namespace DestinyBot.Services
         public async Task<IEnumerable<YoutubeVideo>> GetVideosForUserAsync(string user)
         {
             var id = await GetUploadPlaylistAsync(user);
-            if (id is null)
-            {
-                return new List<YoutubeVideo>();
-            }
+            if (id is null) return new List<YoutubeVideo>();
 
             var response =
                 await _httpClient.GetStringAsync(
@@ -48,7 +45,9 @@ namespace DestinyBot.Services
             return json.YoutubeVideos;
         }
 
-        public async Task<YoutubeVideo> GetLatestVideoAsync(string user) =>
-            (await GetVideosForUserAsync(user))?.FirstOrDefault();
+        public async Task<YoutubeVideo> GetLatestVideoAsync(string user)
+        {
+            return (await GetVideosForUserAsync(user))?.FirstOrDefault();
+        }
     }
 }

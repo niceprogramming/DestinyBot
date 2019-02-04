@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DestinyBot.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -9,17 +8,9 @@ namespace DestinyBot.Data
     public class DestinyBotContext : DbContext
     {
         private readonly ILoggerFactory _loggerFactory;
-        public DbSet<GuildOwner> GuildOwners { get; set; }
-        public DbSet<Youtube> Channels { get; set; }
-        public DbSet<TwitchStreamer> TwitchStreamers { get; set; }
-        public DbSet<Game> Games { get; set; }
-        
-        public DbSet<YoutubeSubscription> YoutubeSubscriptions { get; set; }
-        public DbSet<TwitchSubscription> TwitchSubscriptions { get; set; }
 
         public DestinyBotContext()
         {
-            
         }
 
         public DestinyBotContext(ILoggerFactory loggerFactory)
@@ -27,10 +18,19 @@ namespace DestinyBot.Data
             _loggerFactory = loggerFactory;
         }
 
+        public DbSet<GuildOwner> GuildOwners { get; set; }
+        public DbSet<Youtube> Channels { get; set; }
+        public DbSet<TwitchStreamer> TwitchStreamers { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<Reminder> Reminders { get; set; }
+        public DbSet<YoutubeSubscription> YoutubeSubscriptions { get; set; }
+        public DbSet<TwitchSubscription> TwitchSubscriptions { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //Directory.CreateDirectory("destinybot/");
-            optionsBuilder.UseSqlite($"Data Source=bot.db");
+            Directory.CreateDirectory("data");
+            optionsBuilder.UseSqlite("Data Source=data/bot.db");
+
             optionsBuilder.UseLoggerFactory(_loggerFactory);
         }
 
@@ -41,7 +41,8 @@ namespace DestinyBot.Data
             modelBuilder.Entity<Youtube>(t =>
             {
                 t.HasKey(x => x.Id);
-                t.HasMany(x => x.YoutubeSubscriptions).WithOne(x => x.Youtube).HasForeignKey(x => x.YoutubeId); ;
+                t.HasMany(x => x.YoutubeSubscriptions).WithOne(x => x.Youtube).HasForeignKey(x => x.YoutubeId);
+                ;
             });
 
             modelBuilder.Entity<TwitchStreamer>(t =>

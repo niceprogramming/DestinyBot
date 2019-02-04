@@ -7,21 +7,18 @@ namespace DestinyBot.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Channels",
-                columns: table => new
+                "Channels",
+                table => new
                 {
                     Id = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     LatestVideoDate = table.Column<long>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Channels", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Channels", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "GuildOwners",
-                columns: table => new
+                "GuildOwners",
+                table => new
                 {
                     GuildId = table.Column<string>(nullable: false),
                     ChannelHub = table.Column<string>(nullable: true),
@@ -30,14 +27,25 @@ namespace DestinyBot.Data.Migrations
                     TwitterId = table.Column<long>(nullable: false),
                     TwitchId = table.Column<long>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GuildOwners", x => x.GuildId);
-                });
+                constraints: table => { table.PrimaryKey("PK_GuildOwners", x => x.GuildId); });
 
             migrationBuilder.CreateTable(
-                name: "TwitchStreamers",
-                columns: table => new
+                "Reminders",
+                table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DateCreated = table.Column<long>(nullable: false),
+                    TimeToRemind = table.Column<long>(nullable: false),
+                    Message = table.Column<string>(nullable: true),
+                    ChannelId = table.Column<long>(nullable: false),
+                    GuildId = table.Column<long>(nullable: false)
+                },
+                constraints: table => { table.PrimaryKey("PK_Reminders", x => x.Id); });
+
+            migrationBuilder.CreateTable(
+                "TwitchStreamers",
+                table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
@@ -45,14 +53,11 @@ namespace DestinyBot.Data.Migrations
                     SteamStartTime = table.Column<long>(nullable: false),
                     StreamEndTime = table.Column<long>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TwitchStreamers", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_TwitchStreamers", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "YoutubeSubscriptions",
-                columns: table => new
+                "YoutubeSubscriptions",
+                table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
@@ -63,16 +68,16 @@ namespace DestinyBot.Data.Migrations
                 {
                     table.PrimaryKey("PK_YoutubeSubscriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_YoutubeSubscriptions_Channels_YoutubeId",
-                        column: x => x.YoutubeId,
-                        principalTable: "Channels",
-                        principalColumn: "Id",
+                        "FK_YoutubeSubscriptions_Channels_YoutubeId",
+                        x => x.YoutubeId,
+                        "Channels",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Games",
-                columns: table => new
+                "Games",
+                table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
@@ -85,16 +90,16 @@ namespace DestinyBot.Data.Migrations
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Games_TwitchStreamers_TwitchStreamerId",
-                        column: x => x.TwitchStreamerId,
-                        principalTable: "TwitchStreamers",
-                        principalColumn: "Id",
+                        "FK_Games_TwitchStreamers_TwitchStreamerId",
+                        x => x.TwitchStreamerId,
+                        "TwitchStreamers",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TwitchSubscriptions",
-                columns: table => new
+                "TwitchSubscriptions",
+                table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
@@ -108,48 +113,51 @@ namespace DestinyBot.Data.Migrations
                 {
                     table.PrimaryKey("PK_TwitchSubscriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TwitchSubscriptions_TwitchStreamers_TwitchStreamerId",
-                        column: x => x.TwitchStreamerId,
-                        principalTable: "TwitchStreamers",
-                        principalColumn: "Id",
+                        "FK_TwitchSubscriptions_TwitchStreamers_TwitchStreamerId",
+                        x => x.TwitchStreamerId,
+                        "TwitchStreamers",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Games_TwitchStreamerId",
-                table: "Games",
-                column: "TwitchStreamerId");
+                "IX_Games_TwitchStreamerId",
+                "Games",
+                "TwitchStreamerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TwitchSubscriptions_TwitchStreamerId",
-                table: "TwitchSubscriptions",
-                column: "TwitchStreamerId");
+                "IX_TwitchSubscriptions_TwitchStreamerId",
+                "TwitchSubscriptions",
+                "TwitchStreamerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_YoutubeSubscriptions_YoutubeId",
-                table: "YoutubeSubscriptions",
-                column: "YoutubeId");
+                "IX_YoutubeSubscriptions_YoutubeId",
+                "YoutubeSubscriptions",
+                "YoutubeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Games");
+                "Games");
 
             migrationBuilder.DropTable(
-                name: "GuildOwners");
+                "GuildOwners");
 
             migrationBuilder.DropTable(
-                name: "TwitchSubscriptions");
+                "Reminders");
 
             migrationBuilder.DropTable(
-                name: "YoutubeSubscriptions");
+                "TwitchSubscriptions");
 
             migrationBuilder.DropTable(
-                name: "TwitchStreamers");
+                "YoutubeSubscriptions");
 
             migrationBuilder.DropTable(
-                name: "Channels");
+                "TwitchStreamers");
+
+            migrationBuilder.DropTable(
+                "Channels");
         }
     }
 }

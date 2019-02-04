@@ -2,18 +2,18 @@
 using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Data.Entities;
-using DestinyBot.Preconditions;
 using DestinyBot.Services;
 using Discord;
 using Discord.Commands;
+using Serilog;
 
 namespace DestinyBot.Modules
 {
     public class GuildModule : ModuleBase<SocketCommandContext>
     {
         private readonly DestinyBotContext _db;
-        private readonly YoutubeService _youtube;
         private readonly TwitchService _twitchService;
+        private readonly YoutubeService _youtube;
 
         public GuildModule(DestinyBotContext db, YoutubeService youtube, TwitchService twitchService)
         {
@@ -39,28 +39,27 @@ namespace DestinyBot.Modules
 
             var youtubeSub = new YoutubeSubscription
             {
-                DiscordChannelId = owner.ChannelHub,
+                DiscordChannelId = owner.ChannelHub
             };
-            var channel = new Youtube()
+            var channel = new Youtube
             {
                 Id = video.Snippet.ChannelId,
                 Name = video.Snippet.ChannelTitle,
                 LatestVideoDate = video.Snippet.PublishedAt.ToUnixTimeSeconds(),
-                YoutubeSubscriptions = new List<YoutubeSubscription>() { youtubeSub}
+                YoutubeSubscriptions = new List<YoutubeSubscription> {youtubeSub}
             };
-
+            Log.Information($"{channel.Name}");
             var twitchSub = new TwitchSubscription
             {
-                DiscordChannelId = owner.ChannelHub,
-                
+                DiscordChannelId = owner.ChannelHub
             };
-            var streamer = new TwitchStreamer()
+            var streamer = new TwitchStreamer
             {
                 Id = user.Id,
                 Name = user.DisplayName,
-                TwitchSubscriptions = new List<TwitchSubscription>() { twitchSub }
+                TwitchSubscriptions = new List<TwitchSubscription> {twitchSub}
             };
-
+            Log.Information($"{streamer.Name}");
             _db.Add(owner);
             _db.Add(channel);
             _db.Add(streamer);
