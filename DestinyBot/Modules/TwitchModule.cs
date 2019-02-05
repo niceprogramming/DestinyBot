@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DestinyBot.Data;
+﻿using DestinyBot.Data;
 using DestinyBot.Preconditions;
 using DestinyBot.Services;
 using Discord;
@@ -8,6 +6,8 @@ using Discord.Commands;
 using Humanizer;
 using Humanizer.Localisation;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace DestinyBot.Modules
 {

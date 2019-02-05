@@ -18,7 +18,7 @@ namespace DestinyBot
             catch (Exception e)
             {
                 // How real men prevent errors
-                Console.WriteLine(e);
+                Log.Information(e,"Application exiting with Exception");
                 throw;
             }
         }

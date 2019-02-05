@@ -17,7 +17,8 @@ namespace DestinyBot.Data
         {
             _loggerFactory = loggerFactory;
         }
-
+        public DbSet<TwitterUser> TwitterUsers { get; set; }
+        public DbSet<TwitterSubscription> TwitterSubscriptions { get; set; }
         public DbSet<GuildOwner> GuildOwners { get; set; }
         public DbSet<Youtube> Channels { get; set; }
         public DbSet<TwitchStreamer> TwitchStreamers { get; set; }
@@ -38,6 +39,14 @@ namespace DestinyBot.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<GuildOwner>(e => e.HasKey(_ => _.GuildId));
+            modelBuilder.Entity<TwitterUser>(t =>
+            {
+                t.HasKey(x => x.Id);
+                t.HasIndex(x => x.LastTweetId);
+
+                t.HasMany(x => x.TwitterSubscriptions).WithOne(x => x.User).HasForeignKey(x => x.TwitterUserId);
+            });
+
             modelBuilder.Entity<Youtube>(t =>
             {
                 t.HasKey(x => x.Id);

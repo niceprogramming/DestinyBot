@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Jobs;
@@ -68,7 +69,7 @@ namespace DestinyBot
 
                 foreach (var subscription in db.Channels)
                 {
-                    Log.Information("{channelName}", subscription.Name);
+                    
                     registry.Schedule(() => new YoutubeJob(
                             subscription.Name,
                             _services.GetService<YoutubeService>(),
@@ -81,7 +82,7 @@ namespace DestinyBot
 
                 foreach (var streamer in db.TwitchStreamers)
                 {
-                    Log.Information("{channelName}", streamer.Name);
+                    
                     registry.Schedule(() => new TwitchJob(
                             streamer.Id,
                             _services.GetService<TwitchService>(),
@@ -90,6 +91,18 @@ namespace DestinyBot
                         .WithName(streamer.Id.ToString())
                         .ToRunNow().AndEvery(1)
                         .Minutes();
+                }
+
+                foreach (var twitterUser in db.TwitterUsers)
+                {
+                    registry.Schedule(() => new TwitterJob(
+                         twitterUser.Id, 
+                         _services.GetService<TwitterService>(),
+                        _services.GetService<DestinyBotContext>(),
+                         _client))
+                        .WithName(twitterUser.Id.ToString())
+                        .ToRunNow().AndEvery(3)
+                        .Minutes(); 
                 }
             }
 
@@ -112,11 +125,17 @@ namespace DestinyBot
                 .AddSingleton(_client)
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlingService>()
+                .AddSingleton<HttpClient>()
+
+                .AddSingleton<AslanService>()
+                .AddScoped(s => new ImgurService(config.ImgurClientId))
+                .AddSingleton(new TwitterService(config.TwitterConsumerKey, config.TwitterConsumerSecret, config.TwitterAccessToken, config.TwitterAccessSecret))
+                .AddSingleton<FerretService>()
                 .Configure<BotConfig>(_config)
                 .AddSingleton(new YoutubeService(config.YoutubeKey))
                 .AddSingleton(new TwitchService(config.TwitchClientId)).AddSingleton<ReminderService>()
 #if DEBUG
-                //.AddLogging(b => b.AddSerilog(dispose: true))
+                .AddLogging(b => b.AddSerilog(dispose: true))
 #endif
                 .AddDbContext<DestinyBotContext>(ServiceLifetime.Transient)
                 //We delegate the config object so we dont have to use IOptionsSnapshot<T> or IOptions<T> to get the Config

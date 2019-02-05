@@ -6,7 +6,7 @@
         public string ChannelHub { get; set; }
         public string Snowflake { get; set; }
         public string YoutubeId { get; set; }
-        public long TwitterId { get; set; }
+        public long TwitterUserId { get; set; }
         public long TwitchId { get; set; }
     }
 }

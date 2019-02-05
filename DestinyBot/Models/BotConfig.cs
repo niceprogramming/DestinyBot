@@ -10,5 +10,9 @@
         public string ImgurAlbumId { get; set; }
         public string Prefix { get; set; }
         public int ThrottleLength { get; set; }
+        public string TwitterConsumerKey { get; set; }
+        public string TwitterConsumerSecret { get; set; }
+        public string TwitterAccessToken { get; set; }
+        public string TwitterAccessSecret { get; set; }
     }
 }

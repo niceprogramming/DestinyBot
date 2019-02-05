@@ -23,16 +23,24 @@ namespace DestinyBot.Services
             _commands = commands;
             _config = config;
             _commands.Log += BotLogHook.Log;
-
+            _commands.CommandExecuted += CommandExecuted;
+            
             _client.MessageReceived += MessageReceived;
+        }
+        
+        private async Task CommandExecuted(Optional<CommandInfo> arg1, ICommandContext arg2, IResult arg3)
+        {
+            
+            Log.Information("{User} executed {commandName} command" ,arg2.User.Username,arg1.Value.Name);
         }
 
         public async Task StartAsync(IServiceProvider provider)
         {
             _provider = provider;
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
+            
         }
-
+        
         private async Task MessageReceived(SocketMessage rawMessage)
         {
             var stopwatch = new Stopwatch();
@@ -51,7 +59,7 @@ namespace DestinyBot.Services
             var context = new SocketCommandContext(_client, message);
 
             var result = await _commands.ExecuteAsync(context, argPos, _provider);
-
+            
             if (!result.IsSuccess) Log.Error($"{result.Error}: {result.ErrorReason}");
 
             stopwatch.Stop();

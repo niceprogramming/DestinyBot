@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DestinyBot.Data.Migrations
 {
     [DbContext(typeof(DestinyBotContext))]
-    [Migration("20190203205758_initial")]
-    partial class initial
+    [Migration("20190205032715_twitter")]
+    partial class twitter
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,7 +48,7 @@ namespace DestinyBot.Data.Migrations
 
                     b.Property<long>("TwitchId");
 
-                    b.Property<long>("TwitterId");
+                    b.Property<long>("TwitterUserId");
 
                     b.Property<string>("YoutubeId");
 
@@ -71,6 +71,8 @@ namespace DestinyBot.Data.Migrations
                     b.Property<string>("Message");
 
                     b.Property<long>("TimeToRemind");
+
+                    b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
@@ -113,6 +115,40 @@ namespace DestinyBot.Data.Migrations
                     b.HasIndex("TwitchStreamerId");
 
                     b.ToTable("TwitchSubscriptions");
+                });
+
+            modelBuilder.Entity("DestinyBot.Data.Entities.TwitterSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("DiscordChannelId");
+
+                    b.Property<long>("TwitterUserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TwitterUserId");
+
+                    b.ToTable("TwitterSubscriptions");
+                });
+
+            modelBuilder.Entity("DestinyBot.Data.Entities.TwitterUser", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("LastTweetId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("ScreenName");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LastTweetId");
+
+                    b.ToTable("TwitterUsers");
                 });
 
             modelBuilder.Entity("DestinyBot.Data.Entities.Youtube", b =>
@@ -158,6 +194,14 @@ namespace DestinyBot.Data.Migrations
                     b.HasOne("DestinyBot.Data.Entities.TwitchStreamer", "TwitchStreamer")
                         .WithMany("TwitchSubscriptions")
                         .HasForeignKey("TwitchStreamerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DestinyBot.Data.Entities.TwitterSubscription", b =>
+                {
+                    b.HasOne("DestinyBot.Data.Entities.TwitterUser", "User")
+                        .WithMany("TwitterSubscriptions")
+                        .HasForeignKey("TwitterUserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
