@@ -5,7 +5,7 @@ services:
     image: destinybot
     restart: on-failure
     volumes:
-      - ./data:/data
+      - ./data:/app/data
     env_file:
       - ./config.env
     build:
