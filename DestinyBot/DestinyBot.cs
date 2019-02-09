@@ -44,17 +44,15 @@ namespace DestinyBot
         public async Task StartAsync()
         {
             _client.Log += BotLogHook.Log;
-            _client.Ready += async () =>
-            {
-                SetupJobs();
-                await _services.GetRequiredService<CommandHandlingService>().StartAsync(_services);
-                await _services.GetRequiredService<ReminderService>().StartAsync(_services);
-            };
+            
             await _client.LoginAsync(TokenType.Bot, _config.Get<BotConfig>().DiscordToken);
 
             await _client.StartAsync();
 
-
+            SetupJobs();
+            await _services.GetRequiredService<CommandHandlingService>().StartAsync(_services);
+            await _services.GetRequiredService<ReminderService>().StartAsync(_services);
+            
             await Task.Delay(-1);
         }
 

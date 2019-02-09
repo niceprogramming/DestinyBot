@@ -36,7 +36,9 @@ namespace DestinyBot.Modules
                 ChannelHub = textChannel.Id.ToString(),
                 GuildId = textChannel.GuildId.ToString(),
                 Snowflake = Context.Guild.OwnerId.ToString(),
-                YoutubeId = video.Snippet.ChannelId
+                YoutubeId = video.Snippet.ChannelId,
+                TwitchId = user.Id
+                
             };
 
             var youtubeSub = new YoutubeSubscription

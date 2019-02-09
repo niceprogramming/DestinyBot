@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace DestinyBot.Modules
 {
-    [Alias("live")]
-    [Name("Twitch")]
+    
+    
     [RequireContext(ContextType.Guild)]
     public class TwitchModule : ModuleBase<SocketCommandContext>
     {
@@ -27,7 +27,8 @@ namespace DestinyBot.Modules
             _db = botContext;
         }
 
-        [Command]
+        [Command("twitch")]
+        [Alias("live")]
         [ThrottleCommand]
         public async Task Twitch()
         {
