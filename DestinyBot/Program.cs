@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Serilog;
 
@@ -13,6 +14,7 @@ namespace DestinyBot
                 .CreateLogger();
             try
             {
+                Directory.CreateDirectory("data");
                 await new DestinyBot().StartAsync();
             }
             catch (Exception e)

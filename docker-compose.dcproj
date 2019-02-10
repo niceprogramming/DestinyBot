@@ -6,6 +6,7 @@
     <ProjectGuid>33f2af9f-c4e4-47a4-b2ab-73f0a65190c1</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="aslan.env" />
     <None Include="config.env" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>

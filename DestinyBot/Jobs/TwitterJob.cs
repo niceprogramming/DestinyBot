@@ -55,7 +55,7 @@ namespace DestinyBot.Jobs
                 }
                 else
                 {
-                    var tweets = _twitterService.GetTweetsSinceAsync(user.Id, user.LastTweetId).GetAwaiter().GetResult().ToList();
+                    var tweets = _twitterService.GetTweetsSinceAsync(user.Id, user.LastTweetId).GetAwaiter().GetResult();
 
                     if (!tweets.Any())
                     {

@@ -263,3 +263,4 @@ config.json
 /LittleSteve/Properties/PublishProfiles
 *.db
 /config.env
+/aslan.env
