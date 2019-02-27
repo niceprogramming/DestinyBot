@@ -33,6 +33,7 @@ namespace DestinyBot.Modules
             var image = await _aslanService.GetRandomImage();
 
             var stream = await _client.GetStreamAsync(image.Link);
+            
             await Context.Channel.SendFileAsync(stream, image.Link.Split('/').Last());
         }
     }

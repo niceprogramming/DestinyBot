@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DestinyBot.Data;
@@ -48,8 +49,10 @@ namespace DestinyBot
             await _client.LoginAsync(TokenType.Bot, _config.Get<BotConfig>().DiscordToken);
 
             await _client.StartAsync();
+            await Task.Delay(5000);
             
             SetupJobs();
+            
             await _services.GetRequiredService<CommandHandlingService>().StartAsync(_services);
             await _services.GetRequiredService<ReminderService>().StartAsync(_services);
             
@@ -76,12 +79,11 @@ namespace DestinyBot
                         .WithName(subscription.Id)
                         .ToRunNow().AndEvery(5)
                         .Minutes();
-                    
                 }
 
                 foreach (var streamer in db.TwitchStreamers)
                 {
-
+                    
                     registry.Schedule(() => new TwitchJob(
                             streamer.Id,
                             _services.GetService<TwitchService>(),
@@ -95,13 +97,13 @@ namespace DestinyBot
                 foreach (var twitterUser in db.TwitterUsers)
                 {
                     registry.Schedule(() => new TwitterJob(
-                         twitterUser.Id,
+                         twitterUser.Id, 
                          _services.GetService<TwitterService>(),
                         _services.GetService<DestinyBotContext>(),
                          _client))
                         .WithName(twitterUser.Id.ToString())
                         .ToRunNow().AndEvery(3)
-                        .Minutes();
+                        .Minutes(); 
                 }
             }
 
@@ -119,7 +121,7 @@ namespace DestinyBot
         private IServiceProvider ConfigureServices()
         {
             var config = _config.Get<BotConfig>();
-
+            var stuff = Environment.GetEnvironmentVariables();
             return new ServiceCollection()
                 .AddSingleton(_client)
                 .AddSingleton<CommandService>()
