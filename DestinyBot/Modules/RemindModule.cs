@@ -23,7 +23,7 @@ namespace DestinyBot.Modules
         [Command("reminder")]
         [Alias("rm", "remindme", "remind")]
         [ThrottleCommand]
-        [RequireOwnerOrAdmin]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Reminder(TimeSpan waitTime, [Remainder] string message)
         {
             var reminder = new Reminder
