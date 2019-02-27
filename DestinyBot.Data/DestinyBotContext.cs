@@ -29,7 +29,7 @@ namespace DestinyBot.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            Directory.CreateDirectory("data");
+            
             optionsBuilder.UseSqlite("Data Source=data/bot.db");
 
             optionsBuilder.UseLoggerFactory(_loggerFactory);
