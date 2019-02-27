@@ -44,6 +44,14 @@ namespace DestinyBot.Jobs
                 if (streamer is null) return;
 
                 var isStreaming = _twitchService.IsStreamLiveAsync(streamer.Name).GetAwaiter().GetResult();
+                
+                //Twitch api is a dumpsterfire and says the stream is on even after it stops for example it will go null -> null -> On -> null -> null.
+                //we wait for 3 minutes after the last stream to make sure the streamer in actually on or offline
+                //this is arbitrary and seems like it just works
+                if (DateTimeOffset.UtcNow - DateTimeOffset.FromUnixTimeSeconds(streamer.StreamEndTime) < TimeSpan.FromMinutes(3))
+                {
+                    return;
+                }
 
                 //stream has ended and we are waiting for startup again
                 if (!isStreaming && streamer.StreamLength >= TimeSpan.Zero) return;
@@ -113,7 +121,7 @@ namespace DestinyBot.Jobs
                             return;
                         }
 
-                        message.ModifyAsync(x => x.Embed = CreateTwitchEmbed(streamer, stream, logo)).GetAwaiter()
+                        message.ModifyAsync(x => x.Embed = CreateTwitchEmbed(streamer,subscription, stream, logo)).GetAwaiter()
                             .GetResult();
                     }
                 }
@@ -123,7 +131,7 @@ namespace DestinyBot.Jobs
                 {
                     streamer.Games.Last().EndTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     streamer.StreamEndTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
+                    
                     var user = _twitchService.GetUserAsync(streamer.Name).GetAwaiter().GetResult();
 
                     var description = new StringBuilder();
@@ -155,6 +163,8 @@ namespace DestinyBot.Jobs
                         var message =
                             channel.GetMessageAsync((ulong) subscription.MessageId).GetAwaiter()
                                 .GetResult() as IUserMessage;
+
+                        
                         if (message is null)
                         {
                             Log.Information("Message was not found");
@@ -178,18 +188,18 @@ namespace DestinyBot.Jobs
             var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
 
             var message =
-                await channel.SendMessageAsync(string.Empty, embed: CreateTwitchEmbed(streamer, stream, logoUrl));
+                await channel.SendMessageAsync(string.Empty, embed: CreateTwitchEmbed(streamer, subscription, stream, logoUrl));
             return (long) message.Id;
         }
 
-        private Embed CreateTwitchEmbed(TwitchStreamer streamer, Stream stream, string logoUrl)
+        private Embed CreateTwitchEmbed(TwitchStreamer streamer,TwitchSubscription subscription, Stream stream, string logoUrl)
         {
             var timeLive = DateTimeOffset.UtcNow - DateTimeOffset.FromUnixTimeSeconds(streamer.SteamStartTime);
             var game = _twitchService.GetGame(stream.GameId).GetAwaiter().GetResult();
             return new EmbedBuilder()
-                .WithAuthor($"{streamer.Name} is live", url: $"https://twitch.tv/{streamer.Name}")
+                .WithAuthor($"{streamer.Name} is live", url: subscription.AlternateLink ?? $"https://twitch.tv/{streamer.Name}")
                 .WithTitle($"{stream.Title}")
-                .WithUrl($"https://twitch.tv/{streamer.Name}")
+                .WithUrl(subscription.AlternateLink ?? $"https://twitch.tv/{streamer.Name}")
                 .WithThumbnailUrl(logoUrl)
                 .AddField("Playing", string.IsNullOrWhiteSpace(game.Name) ? "No Game" : game.Name, true)
                 .AddField("Viewers", stream.ViewerCount, true)
