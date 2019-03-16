@@ -34,6 +34,15 @@ namespace DestinyBot.Services
                 await context.SaveChangesAsync();
             }
         }
+        
+        public async Task RemoveCommand(string name)
+        {
+            using (var context = _services.GetService<DestinyBotContext>())
+            {
+                context.CustomCommands.Remove(new CustomCommand(){Name = name});
+                await context.SaveChangesAsync();
+            }
+        }
 
         public async Task BuiltCommandsAsync()
         {
