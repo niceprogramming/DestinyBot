@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Data.Entities;
@@ -41,10 +40,11 @@ namespace DestinyBot.Modules
         [Remarks("?twitter")]
         public async Task Twitter()
         {
-            var owner = await _botContext.GuildOwners.FirstOrDefaultAsync(x => Context.Guild.Id.ToString() == x.GuildId);
+            var owner = await _botContext.GuildOwners.FirstOrDefaultAsync(x =>
+                Context.Guild.Id.ToString() == x.GuildId);
 
             if (owner is null || owner.TwitchId == 0) return;
-           
+
 
             var tweet = await _twitterService.GetLatestTweetForUserAsync(owner.TwitterUserId);
 
@@ -84,28 +84,24 @@ namespace DestinyBot.Modules
                     s => s.WithName(userResponse.ScreenName).ToRunEvery(30).Seconds());
             }
 
-            if (user.TwitterSubscriptions.Any(x => x.DiscordChannelId == (long)guildChannel.Id))
+            if (user.TwitterSubscriptions.Any(x => x.DiscordChannelId == (long) guildChannel.Id))
             {
                 await ReplyAsync($"You already subscribed to {user.ScreenName} in {guildChannel.Name}");
                 return;
             }
 
-            user.TwitterSubscriptions.Add(new TwitterSubscription()
+            user.TwitterSubscriptions.Add(new TwitterSubscription
             {
-                DiscordChannelId = (long)guildChannel.Id,
+                DiscordChannelId = (long) guildChannel.Id,
                 TwitterUserId = user.Id
             });
-
+            _botContext.GuildOwners.FirstOrDefault(x => x.GuildId.ToString() == x.GuildId).TwitterUserId = user.Id;
             var changes = _botContext.SaveChanges();
 
             if (changes > 0)
-            {
                 await ReplyAsync($"Alert for {user.ScreenName} added to {guildChannel.Name}");
-            }
             else
-            {
                 await ReplyAsync($"Unable to create Alert for {user.ScreenName}");
-            }
         }
 
         [Command("remove")]
@@ -125,7 +121,7 @@ namespace DestinyBot.Modules
             }
 
             var alert = twitter.TwitterSubscriptions.FirstOrDefault(x =>
-                x.DiscordChannelId == (long)guildChannel.Id);
+                x.DiscordChannelId == (long) guildChannel.Id);
             if (alert is null)
             {
                 await ReplyAsync($"This channel doesnt contain an alert for {twitter.ScreenName}");
@@ -133,7 +129,8 @@ namespace DestinyBot.Modules
             }
 
             twitter.TwitterSubscriptions.Remove(alert);
-            var guildOwner = await _botContext.GuildOwners.FirstOrDefaultAsync(x => Context.Guild.Id.ToString() == x.GuildId);
+            var guildOwner =
+                await _botContext.GuildOwners.FirstOrDefaultAsync(x => Context.Guild.Id.ToString() == x.GuildId);
             if (guildOwner.TwitterUserId == twitter.Id)
             {
                 var owner = await _botContext.GuildOwners.FindAsync(guildOwner.Snowflake,
@@ -144,13 +141,9 @@ namespace DestinyBot.Modules
             var changes = _botContext.SaveChanges();
 
             if (changes > 0)
-            {
                 await ReplyAsync($"Alert for {twitter.ScreenName} removed from {guildChannel.Name}");
-            }
             else
-            {
                 await ReplyAsync($"Unable to remove Alert for {twitter.ScreenName}");
-            }
         }
 
         protected override void AfterExecute(CommandInfo command)

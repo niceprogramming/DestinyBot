@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DestinyBot.Data;
@@ -45,17 +44,19 @@ namespace DestinyBot
         public async Task StartAsync()
         {
             _client.Log += BotLogHook.Log;
-            
+
             await _client.LoginAsync(TokenType.Bot, _config.Get<BotConfig>().DiscordToken);
 
             await _client.StartAsync();
+
             await Task.Delay(5000);
-            
+
             SetupJobs();
-            
+
             await _services.GetRequiredService<CommandHandlingService>().StartAsync(_services);
             await _services.GetRequiredService<ReminderService>().StartAsync(_services);
-            
+            await _services.GetRequiredService<CustomCommandService>().StartAsync(_services);
+
             await Task.Delay(-1);
         }
 
@@ -69,8 +70,6 @@ namespace DestinyBot
                 db.Database.Migrate();
 
                 foreach (var subscription in db.Channels)
-                {
-                    
                     registry.Schedule(() => new YoutubeJob(
                             subscription.Name,
                             _services.GetService<YoutubeService>(),
@@ -79,11 +78,8 @@ namespace DestinyBot
                         .WithName(subscription.Id)
                         .ToRunNow().AndEvery(5)
                         .Minutes();
-                }
 
                 foreach (var streamer in db.TwitchStreamers)
-                {
-                    
                     registry.Schedule(() => new TwitchJob(
                             streamer.Id,
                             _services.GetService<TwitchService>(),
@@ -92,19 +88,16 @@ namespace DestinyBot
                         .WithName(streamer.Id.ToString())
                         .ToRunNow().AndEvery(1)
                         .Minutes();
-                }
 
                 foreach (var twitterUser in db.TwitterUsers)
-                {
                     registry.Schedule(() => new TwitterJob(
-                         twitterUser.Id, 
-                         _services.GetService<TwitterService>(),
-                        _services.GetService<DestinyBotContext>(),
-                         _client))
+                            twitterUser.Id,
+                            _services.GetService<TwitterService>(),
+                            _services.GetService<DestinyBotContext>(),
+                            _client))
                         .WithName(twitterUser.Id.ToString())
                         .ToRunNow().AndEvery(3)
-                        .Minutes(); 
-                }
+                        .Minutes();
             }
 
             JobManager.Initialize(registry);
@@ -127,10 +120,11 @@ namespace DestinyBot
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<HttpClient>()
-
+                .AddSingleton<CustomCommandService>()
                 .AddSingleton<AslanService>()
                 .AddScoped(s => new ImgurService(config.ImgurClientId))
-                .AddSingleton(new TwitterService(config.TwitterConsumerKey, config.TwitterConsumerSecret, config.TwitterAccessToken, config.TwitterAccessSecret))
+                .AddSingleton(new TwitterService(config.TwitterConsumerKey, config.TwitterConsumerSecret,
+                    config.TwitterAccessToken, config.TwitterAccessSecret))
                 .AddSingleton<FerretService>()
                 .Configure<BotConfig>(_config)
                 .AddSingleton(new YoutubeService(config.YoutubeKey))
