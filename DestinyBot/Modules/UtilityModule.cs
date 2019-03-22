@@ -21,6 +21,7 @@ namespace DestinyBot.Modules
             await ReplyAsync("Please, I want to live");
             Environment.Exit(0);
         }
+
         [Command("restart")]
         [RequireOwnerOrAdmin]
         public async Task Restart()
