@@ -17,14 +17,13 @@ namespace DestinyBot.Modules
 
         [Command("add")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
-        public async Task AddCommand(string name, string content)
+        public async Task AddCommand(string name, [Remainder] string content)
         {
             await _customCommandService.AddCommand(name, content);
             await _customCommandService.BuiltCommandsAsync();
             await ReplyAsync($"{name} command created");
-            
         }
-        
+
         [Command("remove")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task RemoveCommand(string name)
