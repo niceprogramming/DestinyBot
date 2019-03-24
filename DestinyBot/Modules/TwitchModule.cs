@@ -1,4 +1,7 @@
-﻿using DestinyBot.Data;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using DestinyBot.Data;
 using DestinyBot.Preconditions;
 using DestinyBot.Services;
 using Discord;
@@ -6,13 +9,9 @@ using Discord.Commands;
 using Humanizer;
 using Humanizer.Localisation;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 
 namespace DestinyBot.Modules
 {
-    
-    
     [RequireContext(ContextType.Guild)]
     public class TwitchModule : ModuleBase<SocketCommandContext>
     {
@@ -36,7 +35,8 @@ namespace DestinyBot.Modules
 
             if (owner is null || owner.TwitchId == 0) return;
             var twitch =
-                await _db.TwitchStreamers.FirstOrDefaultAsync(x => x.Id == owner.TwitchId);
+                await _db.TwitchStreamers.Include(x => x.TwitchSubscriptions)
+                    .FirstOrDefaultAsync(x => x.Id == owner.TwitchId);
             var streamTask = _twitchService.GetStreamAsync(twitch.Name);
             var logo = _twitchService.GetUserAsync(twitch.Name);
 
@@ -48,13 +48,16 @@ namespace DestinyBot.Modules
             }
             else
             {
+                var subscription = twitch.TwitchSubscriptions.FirstOrDefault(x =>
+                    Context.Guild.Channels.Any(c => c.Id == ulong.Parse(x.DiscordChannelId)));
                 var stream = await streamTask;
                 var game = await _twitchService.GetGame(stream.GameId);
                 var timeLive = DateTimeOffset.UtcNow - DateTimeOffset.FromUnixTimeSeconds(twitch.SteamStartTime);
                 var embed = new EmbedBuilder()
-                    .WithAuthor($"{twitch.Name} is live", url: $"https://twitch.tv/{twitch.Name}")
+                    .WithAuthor($"{twitch.Name} is live",
+                        url: subscription?.AlternateLink ?? $"https://twitch.tv/{twitch.Name}")
                     .WithTitle($"{stream.Title}")
-                    .WithUrl($"https://twitch.tv/{twitch.Name}")
+                    .WithUrl(subscription?.AlternateLink ?? $"https://twitch.tv/{twitch.Name}")
                     .WithThumbnailUrl((await logo).ProfileImageUrl)
                     .AddField("Playing", string.IsNullOrWhiteSpace(game?.Name) ? "No Game" : game.Name, true)
                     .AddField("Viewers", stream.ViewerCount, true)
