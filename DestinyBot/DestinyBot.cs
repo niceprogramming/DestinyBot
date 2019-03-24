@@ -121,7 +121,7 @@ namespace DestinyBot
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<HttpClient>()
                 .AddSingleton<CustomCommandService>()
-                .AddSingleton<AslanService>()
+                .AddSingleton<RandomImageService>()
                 .AddScoped(s => new ImgurService(config.ImgurClientId))
                 .AddSingleton(new TwitterService(config.TwitterConsumerKey, config.TwitterConsumerSecret,
                     config.TwitterAccessToken, config.TwitterAccessSecret))
