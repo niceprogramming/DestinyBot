@@ -24,6 +24,7 @@ namespace DestinyBot.Services
         public async Task StartAsync(IServiceProvider services)
         {
             _services = services;
+            await BuiltCommandsAsync();
         }
 
         public async Task AddCommand(string name, string content, params string[] aliases)
@@ -34,12 +35,12 @@ namespace DestinyBot.Services
                 await context.SaveChangesAsync();
             }
         }
-        
+
         public async Task RemoveCommand(string name)
         {
             using (var context = _services.GetService<DestinyBotContext>())
             {
-                context.CustomCommands.Remove(new CustomCommand(){Name = name});
+                context.CustomCommands.Remove(new CustomCommand {Name = name});
                 await context.SaveChangesAsync();
             }
         }
