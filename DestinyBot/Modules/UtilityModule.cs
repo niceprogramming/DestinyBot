@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DestinyBot.Preconditions;
+using Discord;
 using Discord.Commands;
 
 namespace DestinyBot.Modules
@@ -15,7 +15,7 @@ namespace DestinyBot.Modules
         }
 
         [Command("kill")]
-        [RequireOwnerOrAdmin]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Kill()
         {
             await ReplyAsync("Please, I want to live");
@@ -23,7 +23,7 @@ namespace DestinyBot.Modules
         }
 
         [Command("restart")]
-        [RequireOwnerOrAdmin]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Restart()
         {
             await ReplyAsync("I'll be back");
