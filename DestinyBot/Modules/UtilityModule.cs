@@ -15,7 +15,7 @@ namespace DestinyBot.Modules
         }
 
         [Command("kill")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Kill()
         {
             await ReplyAsync("Please, I want to live");
@@ -23,7 +23,7 @@ namespace DestinyBot.Modules
         }
 
         [Command("restart")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Restart()
         {
             await ReplyAsync("I'll be back");
