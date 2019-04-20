@@ -115,6 +115,8 @@ namespace DestinyBot.Data.Migrations
 
                 b.Property<string>("DiscordChannelId");
 
+                b.Property<bool>("Message");
+
                 b.Property<long>("MessageId");
 
                 b.Property<bool>("ShouldPin");

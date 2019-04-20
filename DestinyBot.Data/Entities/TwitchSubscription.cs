@@ -7,6 +7,7 @@
         public TwitchStreamer TwitchStreamer { get; set; }
         public long TwitchStreamerId { get; set; }
         public string AlternateLink { get; set; }
+        public bool Message { get; set; }
         public long MessageId { get; set; }
         public bool ShouldPin { get; set; }
     }
