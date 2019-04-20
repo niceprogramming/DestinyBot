@@ -188,7 +188,7 @@ namespace DestinyBot.Jobs
             var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
 
             var message =
-                await channel.SendMessageAsync(string.Empty,
+                await channel.SendMessageAsync(subscription?.MessageText ?? string.Empty,
                     embed: CreateTwitchEmbed(streamer, subscription, stream, logoUrl));
             return (long) message.Id;
         }

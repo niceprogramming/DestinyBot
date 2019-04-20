@@ -22,19 +22,19 @@ namespace DestinyBot.Services
             };
         }
 
-        public async Task<string> GetUploadPlaylistAsync(string user)
+        public async Task<string> GetUploadPlaylistAsync(string channelId)
         {
             var response =
                 await _httpClient.GetStringAsync(
-                    $"channels?part=snippet,contentDetails&forUsername={user}&key={_apiKey}");
+                    $"channels?part=snippet,contentDetails&id={channelId}&key={_apiKey}");
             var json = JsonConvert.DeserializeObject<YoutubeChannelResponse>(response);
 
             return json.YoutubeChannels.FirstOrDefault()?.ContentDetails.RelatedPlaylists.Uploads;
         }
 
-        public async Task<IEnumerable<YoutubeVideo>> GetVideosForUserAsync(string user)
+        public async Task<IEnumerable<YoutubeVideo>> GetVideosForUserAsync(string channelId)
         {
-            var id = await GetUploadPlaylistAsync(user);
+            var id = await GetUploadPlaylistAsync(channelId);
             if (id is null) return new List<YoutubeVideo>();
 
             var response =
@@ -45,9 +45,9 @@ namespace DestinyBot.Services
             return json.YoutubeVideos;
         }
 
-        public async Task<YoutubeVideo> GetLatestVideoAsync(string user)
+        public async Task<YoutubeVideo> GetLatestVideoAsync(string channelId)
         {
-            return (await GetVideosForUserAsync(user))?.FirstOrDefault();
+            return (await GetVideosForUserAsync(channelId))?.FirstOrDefault();
         }
     }
 }

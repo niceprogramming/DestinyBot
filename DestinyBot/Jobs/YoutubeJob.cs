@@ -34,7 +34,7 @@ namespace DestinyBot.Jobs
         {
             using (_db)
             {
-                var channel = _db.Channels.Include(x => x.YoutubeSubscriptions).FirstOrDefault(x => x.Name == _name);
+                var channel = _db.Channels.Include(x => x.YoutubeSubscriptions).FirstOrDefault(x => x.Id == _name);
                 var video = _youtube.GetLatestVideoAsync(_name).GetAwaiter().GetResult() ?? new YoutubeVideo();
                 if (channel?.LatestVideoDate >= video.Snippet.PublishedAt.ToUnixTimeSeconds()) return;
                 channel.LatestVideoDate = video.Snippet.PublishedAt.ToUnixTimeSeconds();

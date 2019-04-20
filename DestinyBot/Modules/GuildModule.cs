@@ -16,7 +16,8 @@ namespace DestinyBot.Modules
         private readonly TwitterService _twitterService;
         private readonly YoutubeService _youtube;
 
-        public GuildModule(DestinyBotContext db, YoutubeService youtube, TwitchService twitchService, TwitterService twitterService)
+        public GuildModule(DestinyBotContext db, YoutubeService youtube, TwitchService twitchService,
+            TwitterService twitterService)
         {
             _db = db;
             _youtube = youtube;
@@ -27,7 +28,8 @@ namespace DestinyBot.Modules
         [RequireOwner]
         [Command("setup", RunMode = RunMode.Async)]
         [Summary("Setup guild with default social media accounts.")]
-        public async Task Setup(ITextChannel textChannel, string youtubeName, string twitchName, string twitterName = "")
+        public async Task Setup(ITextChannel textChannel, string youtubeName, string twitchName,
+            string twitterName = "")
         {
             var video = await _youtube.GetLatestVideoAsync(youtubeName);
             var user = await _twitchService.GetUserAsync(twitchName);
@@ -38,7 +40,6 @@ namespace DestinyBot.Modules
                 Snowflake = Context.Guild.OwnerId.ToString(),
                 YoutubeId = video.Snippet.ChannelId,
                 TwitchId = user.Id
-                
             };
 
             var youtubeSub = new YoutubeSubscription
@@ -68,29 +69,28 @@ namespace DestinyBot.Modules
             if (!string.IsNullOrWhiteSpace(twitterName))
             {
                 var response = await _twitterService.GetUserFromHandle(twitterName);
-                var twitter = new TwitterSubscription()
+                var twitter = new TwitterSubscription
                 {
-                    DiscordChannelId = (long)textChannel.Id,
-                    TwitterUserId = (long) response.Id,
-                   
+                    DiscordChannelId = (long) textChannel.Id,
+                    TwitterUserId = (long) response.Id
                 };
-                var twitterUser = new TwitterUser()
+                var twitterUser = new TwitterUser
                 {
                     Id = (long) response.Id,
                     Name = response.Name,
-                    TwitterSubscriptions = new List<TwitterSubscription>(){twitter},
+                    TwitterSubscriptions = new List<TwitterSubscription> {twitter},
                     ScreenName = response.ScreenName
-                    
                 };
-               
+                owner.TwitterUserId = twitterUser.Id;
+
                 _db.Add(twitterUser);
             }
 
-            
+
             _db.Add(owner);
             _db.Add(channel);
             _db.Add(streamer);
-            
+
 
             await _db.SaveChangesAsync();
         }

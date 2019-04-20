@@ -71,7 +71,7 @@ namespace DestinyBot
 
                 foreach (var subscription in db.Channels)
                     registry.Schedule(() => new YoutubeJob(
-                            subscription.Name,
+                            subscription.Id,
                             _services.GetService<YoutubeService>(),
                             _client,
                             _services.GetService<DestinyBotContext>()))

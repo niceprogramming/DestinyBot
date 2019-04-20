@@ -32,7 +32,7 @@ namespace DestinyBot.Modules
             var name = await _db.YoutubeSubscriptions.Include(x => x.Youtube)
                 .FirstOrDefaultAsync(x => x.YoutubeId == owner.YoutubeId);
 
-            var video = await _youtubeService.GetLatestVideoAsync(name.Youtube.Name);
+            var video = await _youtubeService.GetLatestVideoAsync(name.Youtube.Id);
             await ReplyAsync($"https://www.youtube.com/watch?v={video.Snippet.ResourceId.VideoId}");
         }
     }

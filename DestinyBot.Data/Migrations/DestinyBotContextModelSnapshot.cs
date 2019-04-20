@@ -119,6 +119,8 @@ namespace DestinyBot.Data.Migrations
 
                 b.Property<long>("MessageId");
 
+                b.Property<string>("MessageText");
+
                 b.Property<bool>("ShouldPin");
 
                 b.Property<long>("TwitchStreamerId");
