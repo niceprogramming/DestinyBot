@@ -88,7 +88,7 @@ namespace DestinyBot.Jobs
                     var game = _twitchService.GetGame(stream.GameId).GetAwaiter().GetResult();
 
                     var oldGame = streamer.Games.LastOrDefault();
-                    var currentGame = game.Name ?? "No Game";
+                    var currentGame = game?.Name ?? "No Game";
                     if (oldGame != null && oldGame.Name != currentGame)
                     {
                         oldGame.EndTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
