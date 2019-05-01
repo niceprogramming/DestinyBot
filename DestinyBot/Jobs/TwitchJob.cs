@@ -204,7 +204,7 @@ namespace DestinyBot.Jobs
                 .WithTitle($"{stream.Title}")
                 .WithUrl(subscription.AlternateLink ?? $"https://twitch.tv/{streamer.Name}")
                 .WithThumbnailUrl(logoUrl)
-                .AddField("Playing", string.IsNullOrWhiteSpace(game.Name) ? "No Game" : game.Name, true)
+                .AddField("Playing", string.IsNullOrWhiteSpace(game?.Name) ? "No Game" : game.Name, true)
                 .AddField("Viewers", stream.ViewerCount, true)
                 //we add the timeseconds so the image wont be used from the cache 
                 .WithImageUrl(
