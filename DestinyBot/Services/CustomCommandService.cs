@@ -62,9 +62,15 @@ namespace DestinyBot.Services
                     m.AddCommand(customCommands[i].Name, async (ctx, _, _1, _2) =>
                     {
                         await ctx.Channel.SendMessageAsync(customCommands[i].Content);
-                    }, null);
+                    }, CreateCommandBuilder());
                 }
             });
+        }
+
+        // avoids getting hte customCommands and i in the clojure
+        public Action<CommandBuilder> CreateCommandBuilder()
+        {
+            return new Action<CommandBuilder>(_ => { });
         }
     }
 }
