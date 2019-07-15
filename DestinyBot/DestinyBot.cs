@@ -43,6 +43,7 @@ namespace DestinyBot
 
         public async Task StartAsync()
         {
+            
             _client.Log += BotLogHook.Log;
 
             await _client.LoginAsync(TokenType.Bot, _config.Get<BotConfig>().DiscordToken);
@@ -51,8 +52,8 @@ namespace DestinyBot
 
             await Task.Delay(5000);
 
-            SetupJobs();
 
+            SetupJobs();
             await _services.GetRequiredService<CommandHandlingService>().StartAsync(_services);
             await _services.GetRequiredService<ReminderService>().StartAsync(_services);
             await _services.GetRequiredService<CustomCommandService>().StartAsync(_services);
@@ -122,6 +123,7 @@ namespace DestinyBot
                 .AddSingleton<HttpClient>()
                 .AddSingleton<CustomCommandService>()
                 .AddSingleton<RandomImageService>()
+                .AddSingleton<BlockService>()
                 .AddScoped(s => new ImgurService(config.ImgurClientId))
                 .AddSingleton(new TwitterService(config.TwitterConsumerKey, config.TwitterConsumerSecret,
                     config.TwitterAccessToken, config.TwitterAccessSecret))

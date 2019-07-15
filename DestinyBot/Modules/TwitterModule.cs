@@ -36,6 +36,7 @@ namespace DestinyBot.Modules
         }
 
         [Command]
+        [NotBlockedPrecondtion]
         [ThrottleCommand]
         [Remarks("?twitter")]
         public async Task Twitter()

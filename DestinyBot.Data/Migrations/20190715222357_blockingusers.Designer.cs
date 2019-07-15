@@ -2,14 +2,16 @@
 using DestinyBot.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DestinyBot.Data.Migrations
 {
     [DbContext(typeof(DestinyBotContext))]
-    partial class DestinyBotContextModelSnapshot : ModelSnapshot
+    [Migration("20190715222357_blockingusers")]
+    partial class blockingusers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

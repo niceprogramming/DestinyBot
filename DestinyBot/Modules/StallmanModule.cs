@@ -22,6 +22,7 @@ namespace DestinyBot.Modules
 
         [Command("rms", RunMode = RunMode.Async)]
         [Alias("stallman")]
+        [NotBlockedPrecondtion]
         [ThrottleCommand]
         public async Task Stallman([Remainder] string question = null)
         {

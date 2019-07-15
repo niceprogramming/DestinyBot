@@ -28,6 +28,7 @@ namespace DestinyBot.Data
         public DbSet<YoutubeSubscription> YoutubeSubscriptions { get; set; }
         public DbSet<TwitchSubscription> TwitchSubscriptions { get; set; }
         public DbSet<CustomCommand> CustomCommands { get; set; }
+        public DbSet<BlockedUser> BlockedUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -72,6 +73,9 @@ namespace DestinyBot.Data
 
             modelBuilder.Entity<CustomCommand>()
                 .HasKey(x => x.Name);
+
+            modelBuilder.Entity<BlockedUser>()
+                .HasKey(x => x.UserId);
         }
     }
 }

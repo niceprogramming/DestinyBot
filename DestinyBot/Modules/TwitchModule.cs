@@ -28,6 +28,7 @@ namespace DestinyBot.Modules
 
         [Command("twitch")]
         [Alias("live")]
+        [NotBlockedPrecondtion]
         [ThrottleCommand]
         public async Task Twitch()
         {

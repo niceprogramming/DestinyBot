@@ -8,6 +8,7 @@ namespace DestinyBot.Modules
     public class EightBallModule : ModuleBase<SocketCommandContext>
     {
         [Command("8ball")]
+        [NotBlockedPrecondtion]
         [ThrottleCommand]
         public async Task EightBall([Remainder] string question)
         {

@@ -23,6 +23,7 @@ namespace DestinyBot.Modules
 
         [Command("aslan", RunMode = RunMode.Async)]
         [Alias("cat")]
+        [NotBlockedPrecondtion]
         [ThrottleCommand]
         public async Task Aslan([Remainder] string question = null)
         {

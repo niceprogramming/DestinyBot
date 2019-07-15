@@ -58,6 +58,7 @@ namespace DestinyBot.Services
 
             _customModule = await _commands.CreateModuleAsync(string.Empty, m =>
             {
+                m.AddPrecondition(new NotBlockedPrecondtion());
                 m.AddPrecondition(new ThrottleCommandAttribute());
                 foreach (var command in customCommands)
                 {

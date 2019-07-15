@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DestinyBot.Preconditions;
 using Discord.Commands;
 
 namespace DestinyBot.Modules
@@ -7,6 +8,7 @@ namespace DestinyBot.Modules
     [Name("Utility")]
     public class UtilityModule : ModuleBase<SocketCommandContext>
     {
+        [NotBlockedPrecondtion]
         [Command("hello")]
         public Task Hello()
         {

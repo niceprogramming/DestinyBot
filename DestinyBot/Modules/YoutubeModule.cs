@@ -23,6 +23,7 @@ namespace DestinyBot.Modules
         }
 
         [Command]
+        [NotBlockedPrecondtion]
         [ThrottleCommand]
         public async Task Youtube()
         {
