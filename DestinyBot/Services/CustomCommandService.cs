@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Data.Entities;
 using Discord.Commands;
+using Discord.Commands.Builders;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,11 +30,11 @@ namespace DestinyBot.Services
             await BuiltCommandsAsync();
         }
 
-        public async Task AddCommand(string name, string content, params string[] aliases)
+        public async Task AddCommand(string name, string content)
         {
             using (var context = _services.GetService<DestinyBotContext>())
             {
-                context.CustomCommands.Add(new CustomCommand {Name = name, Content = content, Aliases = aliases});
+                context.CustomCommands.Add(new CustomCommand {Name = name, Content = content});
                 await context.SaveChangesAsync();
             }
         }
@@ -47,20 +50,27 @@ namespace DestinyBot.Services
 
         public async Task BuiltCommandsAsync()
         {
+            var customCommands = new List<CustomCommand>();
+
             using (var context = _services.GetService<DestinyBotContext>())
+                customCommands = context.CustomCommands.ToList();
+
+            _customModule = await _commands.CreateModuleAsync(string.Empty, m =>
             {
-                _customModule = await _commands.CreateModuleAsync(string.Empty, m =>
+                for (var i = 0; i < customCommands.Count; i++)
                 {
-                    foreach (var command in context.CustomCommands)
-                        m.AddCommand(command.Name, async (ctx, _, provider, _1) =>
-                        {
-                            using (var db = provider.GetService<DestinyBotContext>())
-                            {
-                                await ctx.Channel.SendMessageAsync(command.Content);
-                            }
-                        }, c => { });
-                });
-            }
+                    m.AddCommand(customCommands[i].Name, async (ctx, _, _1, _2) =>
+                    {
+                        await ctx.Channel.SendMessageAsync(customCommands[i].Content);
+                    }, CreateCommandBuilder());
+                }
+            });
+        }
+
+        // avoids getting hte customCommands and i in the clojure
+        public Action<CommandBuilder> CreateCommandBuilder()
+        {
+            return new Action<CommandBuilder>(_ => { });
         }
     }
 }
