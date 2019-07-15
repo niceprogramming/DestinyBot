@@ -19,7 +19,7 @@ namespace DestinyBot.Preconditions
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context,
             CommandInfo command, IServiceProvider services)
         {
-            var expiryPeriod = TimeSpan.FromSeconds(90);
+            var expiryPeriod = TimeSpan.FromSeconds(45);
             if ((await context.Client.GetApplicationInfoAsync()).Owner.Username == context.User.Username)
             {
                 return PreconditionResult.FromSuccess();
