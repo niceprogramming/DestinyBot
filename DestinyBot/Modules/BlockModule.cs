@@ -24,11 +24,11 @@ namespace DestinyBot.Modules
             var result = await _blockService.BlockUser(user.Id);
             if (result)
             {
-               await ReplyAsync("User was successfully blocked");
+               await ReplyAsync($"{user.Mention} was successfully blocked");
             }
             else
             {
-                await ReplyAsync("User was unable to be blocked");
+                await ReplyAsync($"{user.Mention} was unable to be blocked");
                 
             }
 
@@ -41,11 +41,11 @@ namespace DestinyBot.Modules
             var result = await _blockService.UnblockUser(user.Id);
             if (result)
             {
-                await ReplyAsync("User was successfully unblocked");
+                await ReplyAsync($"{user.Mention} was successfully unblocked");
             }
             else
             {
-                await ReplyAsync("User was unable to be unblocked");
+                await ReplyAsync($"{user.Mention} was unable to be unblocked");
 
             }
 
