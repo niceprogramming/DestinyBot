@@ -18,6 +18,7 @@ namespace DestinyBot.Modules
             _blockService = blockService;
         }
         [Command("block")]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Block(IUser user)
         {
             var result = await _blockService.BlockUser(user.Id);
@@ -34,6 +35,7 @@ namespace DestinyBot.Modules
         }
 
         [Command("unblock")]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Unblock(IUser user)
         {
             var result = await _blockService.UnblockUser(user.Id);
