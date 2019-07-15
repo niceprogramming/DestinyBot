@@ -54,9 +54,11 @@ namespace DestinyBot
 
 
             SetupJobs();
+            //might need an interface here
             await _services.GetRequiredService<CommandHandlingService>().StartAsync(_services);
             await _services.GetRequiredService<ReminderService>().StartAsync(_services);
             await _services.GetRequiredService<CustomCommandService>().StartAsync(_services);
+            await _services.GetRequiredService<BlockService>().StartAsync(_services);
 
             await Task.Delay(-1);
         }

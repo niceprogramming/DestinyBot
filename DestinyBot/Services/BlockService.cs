@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,12 +14,21 @@ namespace DestinyBot.Services
 {
     public class BlockService
     {
-        private readonly IServiceProvider _provider;
-        private readonly ConcurrentDictionary<ulong, BlockedUser> userCache = new ConcurrentDictionary<ulong,BlockedUser>();
+        private IServiceProvider _provider;
+        private ConcurrentDictionary<ulong, BlockedUser> userCache = new ConcurrentDictionary<ulong,BlockedUser>();
 
-        public BlockService(IServiceProvider provider)
+        public BlockService()
+        {
+            
+        }
+
+        public async Task StartAsync(IServiceProvider provider)
         {
             _provider = provider;
+            using (var db = _provider.GetService<DestinyBotContext>())
+            {
+                userCache = new ConcurrentDictionary<ulong, BlockedUser>(db.BlockedUsers.ToDictionary(x => x.UserId));
+            }
         }
 
         public async Task<bool> BlockUser(ulong userId)
