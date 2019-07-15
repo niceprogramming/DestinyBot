@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Data.Entities;
+using DestinyBot.Preconditions;
 using Discord.Commands;
 using Discord.Commands.Builders;
 using Discord.WebSocket;
@@ -57,11 +58,12 @@ namespace DestinyBot.Services
 
             _customModule = await _commands.CreateModuleAsync(string.Empty, m =>
             {
-                for (var i = 0; i < customCommands.Count; i++)
+                m.AddPrecondition(new ThrottleCommandAttribute());
+                foreach (var command in customCommands)
                 {
-                    m.AddCommand(customCommands[i].Name, async (ctx, _, _1, _2) =>
+                    m.AddCommand(command.Name, async (ctx, _, _1, _2) =>
                     {
-                        await ctx.Channel.SendMessageAsync(customCommands[i].Content);
+                        await ctx.Channel.SendMessageAsync(command.Content);
                     }, CreateCommandBuilder());
                 }
             });
