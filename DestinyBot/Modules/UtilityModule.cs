@@ -30,5 +30,14 @@ namespace DestinyBot.Modules
             await ReplyAsync("I'll be back");
             Environment.Exit(1);
         }
+
+        [Command("age")]
+       
+        public async Task Age()
+        {
+            var time = DateTimeOffset.FromUnixTimeMilliseconds((long) ((Context.User.Id >> 22) + 1420070400000UL));
+            await ReplyAsync(time.ToString("F"));
+           
+        }
     }
 }
