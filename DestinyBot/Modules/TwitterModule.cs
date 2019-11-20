@@ -85,7 +85,7 @@ namespace DestinyBot.Modules
                     s => s.WithName(userResponse.ScreenName).ToRunEvery(30).Seconds());
             }
 
-            if (user.TwitterSubscriptions.Any(x => x.DiscordChannelId == (long) guildChannel.Id))
+            if (user.TwitterSubscriptions.Any(x => x.DiscordChannelId == (long)guildChannel.Id))
             {
                 await ReplyAsync($"You already subscribed to {user.ScreenName} in {guildChannel.Name}");
                 return;
@@ -93,7 +93,7 @@ namespace DestinyBot.Modules
 
             user.TwitterSubscriptions.Add(new TwitterSubscription
             {
-                DiscordChannelId = (long) guildChannel.Id,
+                DiscordChannelId = (long)guildChannel.Id,
                 TwitterUserId = user.Id
             });
             _botContext.GuildOwners.FirstOrDefault(x => x.GuildId.ToString() == x.GuildId).TwitterUserId = user.Id;
@@ -122,7 +122,7 @@ namespace DestinyBot.Modules
             }
 
             var alert = twitter.TwitterSubscriptions.FirstOrDefault(x =>
-                x.DiscordChannelId == (long) guildChannel.Id);
+                x.DiscordChannelId == (long)guildChannel.Id);
             if (alert is null)
             {
                 await ReplyAsync($"This channel doesnt contain an alert for {twitter.ScreenName}");

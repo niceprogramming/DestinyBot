@@ -15,11 +15,11 @@ namespace DestinyBot.Services
     public class BlockService
     {
         private IServiceProvider _provider;
-        private ConcurrentDictionary<ulong, BlockedUser> userCache = new ConcurrentDictionary<ulong,BlockedUser>();
+        private ConcurrentDictionary<ulong, BlockedUser> userCache = new ConcurrentDictionary<ulong, BlockedUser>();
 
         public BlockService()
         {
-            
+
         }
 
         public async Task StartAsync(IServiceProvider provider)
@@ -38,7 +38,7 @@ namespace DestinyBot.Services
                 return true;
             }
 
-            var newUser = new BlockedUser() {UserId = userId};
+            var newUser = new BlockedUser() { UserId = userId };
             using (var db = _provider.GetService<DestinyBotContext>())
             {
                 db.BlockedUsers.Add(newUser);
@@ -47,7 +47,7 @@ namespace DestinyBot.Services
                 return (await db.SaveChangesAsync()) > 0;
             }
 
-            
+
         }
 
         public async Task<bool> UnblockUser(ulong userId)
@@ -56,7 +56,7 @@ namespace DestinyBot.Services
             using (var db = _provider.GetService<DestinyBotContext>())
             {
                 db.BlockedUsers.Remove(user);
-                    
+
                 var result = await db.SaveChangesAsync();
                 return result > 0;
             }

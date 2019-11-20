@@ -58,7 +58,7 @@ namespace DestinyBot.Services
         {
             var reminder = reminderObject as Reminder;
 
-            var channel = _client.GetGuild((ulong) reminder.GuildId)?.GetTextChannel((ulong) reminder.ChannelId);
+            var channel = _client.GetGuild((ulong)reminder.GuildId)?.GetTextChannel((ulong)reminder.ChannelId);
 
             var embed = new EmbedBuilder().WithTitle("Reminder")
                 .WithDescription(reminder.Message)

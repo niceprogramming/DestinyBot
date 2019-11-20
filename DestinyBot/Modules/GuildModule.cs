@@ -51,7 +51,7 @@ namespace DestinyBot.Modules
                 Id = video.Snippet.ChannelId,
                 Name = video.Snippet.ChannelTitle,
                 LatestVideoDate = video.Snippet.PublishedAt.ToUnixTimeSeconds(),
-                YoutubeSubscriptions = new List<YoutubeSubscription> {youtubeSub}
+                YoutubeSubscriptions = new List<YoutubeSubscription> { youtubeSub }
             };
             Log.Information($"{channel.Name}");
             var twitchSub = new TwitchSubscription
@@ -62,7 +62,7 @@ namespace DestinyBot.Modules
             {
                 Id = user.Id,
                 Name = user.DisplayName,
-                TwitchSubscriptions = new List<TwitchSubscription> {twitchSub}
+                TwitchSubscriptions = new List<TwitchSubscription> { twitchSub }
             };
             Log.Information($"{streamer.Name}");
 
@@ -71,14 +71,14 @@ namespace DestinyBot.Modules
                 var response = await _twitterService.GetUserFromHandle(twitterName);
                 var twitter = new TwitterSubscription
                 {
-                    DiscordChannelId = (long) textChannel.Id,
-                    TwitterUserId = (long) response.Id
+                    DiscordChannelId = (long)textChannel.Id,
+                    TwitterUserId = (long)response.Id
                 };
                 var twitterUser = new TwitterUser
                 {
-                    Id = (long) response.Id,
+                    Id = (long)response.Id,
                     Name = response.Name,
-                    TwitterSubscriptions = new List<TwitterSubscription> {twitter},
+                    TwitterSubscriptions = new List<TwitterSubscription> { twitter },
                     ScreenName = response.ScreenName
                 };
                 owner.TwitterUserId = twitterUser.Id;

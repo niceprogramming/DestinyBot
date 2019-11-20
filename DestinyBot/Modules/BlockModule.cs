@@ -24,12 +24,12 @@ namespace DestinyBot.Modules
             var result = await _blockService.BlockUser(user.Id);
             if (result)
             {
-               await ReplyAsync($"{user.Mention} was successfully blocked");
+                await ReplyAsync($"{user.Mention} was successfully blocked");
             }
             else
             {
                 await ReplyAsync($"{user.Mention} was unable to be blocked");
-                
+
             }
 
         }

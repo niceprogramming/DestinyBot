@@ -18,7 +18,7 @@ namespace DestinyBot.Services
         }
 
         public async Task<Status> GetLatestTweetForUserAsync(long userId) =>
-            (await _token.Statuses.UserTimelineAsync(userId,1, include_rts: true, exclude_replies: true)).Single();
+            (await _token.Statuses.UserTimelineAsync(userId, 1, include_rts: true, exclude_replies: true)).Single();
 
         public async Task<Status> GetTweetByIdAsync(long tweetId)
         {
@@ -29,7 +29,7 @@ namespace DestinyBot.Services
         public async Task<IEnumerable<Status>> GetTweetsSinceAsync(long userId, long tweetId, int count = 50)
         {
             var tweets =
-                await _token.Statuses.UserTimelineAsync(userId, count, tweetId, include_rts: true, exclude_replies: true ,tweet_mode: TweetMode.Extended);
+                await _token.Statuses.UserTimelineAsync(userId, count, tweetId, include_rts: true, exclude_replies: true, tweet_mode: TweetMode.Extended);
             return tweets.OrderBy(x => x.CreatedAt);
         }
 

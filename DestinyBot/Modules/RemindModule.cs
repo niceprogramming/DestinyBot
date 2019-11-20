@@ -28,12 +28,12 @@ namespace DestinyBot.Modules
         {
             var reminder = new Reminder
             {
-                ChannelId = (long) Context.Channel.Id,
+                ChannelId = (long)Context.Channel.Id,
                 DateCreated = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 Message = message,
                 TimeToRemind = (DateTimeOffset.UtcNow + waitTime).ToUnixTimeSeconds(),
-                GuildId = (long) Context.Guild.Id,
-                UserId = (long) Context.User.Id
+                GuildId = (long)Context.Guild.Id,
+                UserId = (long)Context.User.Id
             };
             var entity = _db.Reminders.Add(reminder).Entity;
             _db.SaveChanges();

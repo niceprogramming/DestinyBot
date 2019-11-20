@@ -32,12 +32,12 @@ namespace DestinyBot.Modules
         }
 
         [Command("age")]
-       
+
         public async Task Age()
         {
-            var time = DateTimeOffset.FromUnixTimeMilliseconds((long) ((Context.User.Id >> 22) + 1420070400000UL)).;
+            var time = DateTimeOffset.FromUnixTimeMilliseconds((long)((Context.User.Id >> 22) + 1420070400000UL)).;
             await ReplyAsync(time.ToString("R"));
-           
+
         }
     }
 }

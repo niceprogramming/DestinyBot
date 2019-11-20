@@ -112,7 +112,7 @@ namespace DestinyBot.Jobs
                         var channel =
                             _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
                         var message =
-                            channel.GetMessageAsync((ulong) subscription.MessageId).GetAwaiter()
+                            channel.GetMessageAsync((ulong)subscription.MessageId).GetAwaiter()
                                 .GetResult() as IUserMessage;
                         if (message is null)
                         {
@@ -161,7 +161,7 @@ namespace DestinyBot.Jobs
                         var channel =
                             _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
                         var message =
-                            channel.GetMessageAsync((ulong) subscription.MessageId).GetAwaiter()
+                            channel.GetMessageAsync((ulong)subscription.MessageId).GetAwaiter()
                                 .GetResult() as IUserMessage;
 
 
@@ -185,12 +185,12 @@ namespace DestinyBot.Jobs
             TwitchSubscription subscription,
             string logoUrl)
         {
-            var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as ITextChannel;
+            var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as IMessageChannel;
 
             var message =
                 await channel.SendMessageAsync(subscription?.MessageText ?? string.Empty,
                     embed: CreateTwitchEmbed(streamer, subscription, stream, logoUrl));
-            return (long) message.Id;
+            return (long)message.Id;
         }
 
         private Embed CreateTwitchEmbed(TwitchStreamer streamer, TwitchSubscription subscription, Stream stream,
