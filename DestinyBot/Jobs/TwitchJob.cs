@@ -185,7 +185,7 @@ namespace DestinyBot.Jobs
             TwitchSubscription subscription,
             string logoUrl)
         {
-            var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as IMessageChannel;
+            var channel = _client.GetChannel(Convert.ToUInt64(subscription.DiscordChannelId)) as SocketTextChannel;
 
             var message =
                 await channel.SendMessageAsync(subscription?.MessageText ?? string.Empty,
