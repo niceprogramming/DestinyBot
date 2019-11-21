@@ -264,3 +264,4 @@ config.json
 *.db
 /config.env
 /aslan.env
+/DestinyBot/Properties

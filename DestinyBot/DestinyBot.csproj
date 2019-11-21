@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="CoreTweet" Version="1.0.0.483" />
-    <PackageReference Include="Discord.Net" Version="2.0.1" />
+    <PackageReference Include="Discord.Net" Version="2.1.1" />
     <PackageReference Include="FluentScheduler" Version="5.3.0" />
     <PackageReference Include="Humanizer.Core" Version="2.5.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.1" />
