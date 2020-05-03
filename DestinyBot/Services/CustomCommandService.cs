@@ -35,7 +35,7 @@ namespace DestinyBot.Services
         {
             using (var context = _services.GetService<DestinyBotContext>())
             {
-                context.CustomCommands.Update(new CustomCommand { Name = name, Content = content);
+                context.CustomCommands.Update(new CustomCommand { Name = name, Content = content });
                 await context.SaveChangesAsync();
             }
         }
