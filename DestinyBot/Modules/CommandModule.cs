@@ -24,12 +24,23 @@ namespace DestinyBot.Modules
             await ReplyAsync($"{name} command created");
         }
 
+        [Command("update")]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
+        public async Task AddCommand(string name, [Remainder] string content)
+        {
+            await _customCommandService.UpdateCommand(name, content);
+            await _customCommandService.BuiltCommandsAsync();
+            await ReplyAsync($"{name} command updated");
+        }
+
+
         [Command("remove")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task RemoveCommand(string name)
         {
             await _customCommandService.RemoveCommand(name);
             await _customCommandService.BuiltCommandsAsync();
+            await ReplyAsync($"{name} command removed");
         }
     }
 }

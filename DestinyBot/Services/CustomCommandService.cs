@@ -31,6 +31,15 @@ namespace DestinyBot.Services
             await BuiltCommandsAsync();
         }
 
+        public async Task UpdateCommand(string name, string content)
+        {
+            using (var context = _services.GetService<DestinyBotContext>())
+            {
+                context.CustomCommands.Update(new CustomCommand { Name = name, Content = content);
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task AddCommand(string name, string content)
         {
             using (var context = _services.GetService<DestinyBotContext>())
