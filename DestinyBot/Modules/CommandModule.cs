@@ -26,7 +26,7 @@ namespace DestinyBot.Modules
 
         [Command("update")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
-        public async Task AddCommand(string name, [Remainder] string content)
+        public async Task UpdateCommand(string name, [Remainder] string content)
         {
             await _customCommandService.UpdateCommand(name, content);
             await _customCommandService.BuiltCommandsAsync();
