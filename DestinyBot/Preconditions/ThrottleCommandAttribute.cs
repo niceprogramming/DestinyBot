@@ -19,7 +19,7 @@ namespace DestinyBot.Preconditions
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context,
             CommandInfo command, IServiceProvider services)
         {
-            var expiryPeriod = TimeSpan.FromSeconds(45);
+            var expiryPeriod = TimeSpan.FromSeconds(15);
             if ((await context.Client.GetApplicationInfoAsync()).Owner.Username == context.User.Username)
             {
                 return PreconditionResult.FromSuccess();
@@ -27,7 +27,7 @@ namespace DestinyBot.Preconditions
 
             var user = context.User as IGuildUser;
 
-            if (user.GuildPermissions.Administrator)
+            if (user.GuildPermissions.Administrator || user.GuildPermissions.ManageMessages || user.RoleIds.Contains((ulong)623491694272184321))
             {
                 return PreconditionResult.FromSuccess();
             }
