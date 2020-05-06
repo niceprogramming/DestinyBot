@@ -69,6 +69,7 @@ namespace DestinyBot.Services
             {
                 m.AddPrecondition(new NotBlockedPrecondtion());
                 m.AddPrecondition(new ThrottleCommandAttribute());
+                m.AddAttributes(new RemainderAttribute());
                 foreach (var command in customCommands)
                 {
                     m.AddCommand(command.Name, async (ctx, _, _1, _2) =>
