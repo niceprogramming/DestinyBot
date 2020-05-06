@@ -69,11 +69,12 @@ namespace DestinyBot.Services
             {
                 m.AddPrecondition(new NotBlockedPrecondtion());
                 m.AddPrecondition(new ThrottleCommandAttribute());
-                m.AddAttributes(new RemainderAttribute());
+                
                 foreach (var command in customCommands)
                 {
                     m.AddCommand(command.Name, async (ctx, _, _1, _2) =>
                     {
+                        
                         await ctx.Channel.SendMessageAsync(command.Content);
                     }, CreateCommandBuilder());
                 }
@@ -83,7 +84,7 @@ namespace DestinyBot.Services
         // avoids getting hte customCommands and i in the clojure
         public Action<CommandBuilder> CreateCommandBuilder()
         {
-            return new Action<CommandBuilder>(_ => { });
+            return new Action<CommandBuilder>(_ =>  _.AddParameter("extra", typeof(string), x => x.AddAttributes(new RemainderAttribute())) );
         }
     }
 }
