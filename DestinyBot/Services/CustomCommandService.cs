@@ -84,7 +84,7 @@ namespace DestinyBot.Services
         // avoids getting hte customCommands and i in the clojure
         public Action<CommandBuilder> CreateCommandBuilder()
         {
-            return new Action<CommandBuilder>(_ =>  _.AddParameter("extra", typeof(string), x => x.AddAttributes(new RemainderAttribute())) );
+            return new Action<CommandBuilder>(_ =>  _.AddParameter("extra", typeof(string), x => { x.AddAttributes(new RemainderAttribute()); x.DefaultValue = string.Empty;}) );
         }
     }
 }
