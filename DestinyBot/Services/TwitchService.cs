@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using DestinyBot.Models.Twitch;
 using Newtonsoft.Json;
+using Serilog;
 using TwitchLib.Api;
 using TwitchLib.Api.Core.Enums;
 
@@ -28,7 +29,7 @@ namespace DestinyBot.Services
 
         public async Task<bool> IsStreamLiveAsync(string username)
         {
-            
+            Log.Information("Username is {user}", username);
             var response = await GetStreamAsync(username);
             return response != null;
         }
