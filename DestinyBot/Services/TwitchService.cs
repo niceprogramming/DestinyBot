@@ -73,7 +73,7 @@ namespace DestinyBot.Services
             {
                 Id = stream.Id,
                 GameId = stream.GameId,
-                CommunityIds = stream.CommunityIds.ToList(),
+                CommunityIds = stream.CommunityIds?.ToList(),
                 Language = stream.Language,
                 StartedAt = stream.StartedAt,
                 Type = stream.Type,
