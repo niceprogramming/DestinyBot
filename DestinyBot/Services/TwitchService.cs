@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DestinyBot.Models.Twitch;
 using Newtonsoft.Json;
 using TwitchLib.Api;
+using TwitchLib.Api.Core.Enums;
 
 namespace DestinyBot.Services
 {
@@ -19,6 +20,7 @@ namespace DestinyBot.Services
         {
             _api = new TwitchAPI();
             _api.Settings.ClientId = apiKey;
+            _api.Settings.Scopes = new List<AuthScopes> {AuthScopes.Any};
             _api.Settings.AccessToken = configTwitchClientSecret;
             _apiKey = apiKey;
             
