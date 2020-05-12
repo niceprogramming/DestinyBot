@@ -116,6 +116,7 @@ namespace DestinyBot
 
         private IServiceProvider ConfigureServices()
         {
+
             var config = _config.Get<BotConfig>();
             var stuff = Environment.GetEnvironmentVariables();
             return new ServiceCollection()
@@ -132,7 +133,7 @@ namespace DestinyBot
                 .AddSingleton<FerretService>()
                 .Configure<BotConfig>(_config)
                 .AddSingleton(new YoutubeService(config.YoutubeKey))
-                .AddSingleton(new TwitchService(config.TwitchClientId)).AddSingleton<ReminderService>()
+                .AddSingleton(new TwitchService(config.TwitchClientId, config.TwitchClientSecret)).AddSingleton<ReminderService>()
 #if DEBUG
                 .AddLogging(b => b.AddSerilog(dispose: true))
 #endif

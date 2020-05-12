@@ -9,6 +9,7 @@ using Discord.Commands;
 using Humanizer;
 using Humanizer.Localisation;
 using Microsoft.EntityFrameworkCore;
+using TwitchLib.Api;
 
 namespace DestinyBot.Modules
 {
@@ -22,6 +23,7 @@ namespace DestinyBot.Modules
 
         public TwitchModule(TwitchService twitchService, DestinyBotContext botContext)
         {
+            
             _twitchService = twitchService;
             _db = botContext;
         }

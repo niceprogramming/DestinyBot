@@ -5,6 +5,7 @@
         public string ConnectionString { get; set; }
         public string YoutubeKey { get; set; }
         public string TwitchClientId { get; set; }
+        public string TwitchClientSecret { get; set; }
         public string DiscordToken { get; set; }
         public string ImgurClientId { get; set; }
         public string ImgurAlbumId { get; set; }

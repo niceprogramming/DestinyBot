@@ -12,7 +12,7 @@ namespace DestinyBot.Models.Twitch
 
         [JsonProperty("user_name")] public string UserName { get; set; }
 
-        [JsonProperty("game_id")] public int GameId { get; set; }
+        [JsonProperty("game_id")] public string GameId { get; set; }
 
         [JsonProperty("community_ids")] public List<string> CommunityIds { get; set; }
 

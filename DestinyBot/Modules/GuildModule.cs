@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DestinyBot.Data;
 using DestinyBot.Data.Entities;
@@ -39,7 +40,7 @@ namespace DestinyBot.Modules
                 GuildId = textChannel.GuildId.ToString(),
                 Snowflake = Context.Guild.OwnerId.ToString(),
                 YoutubeId = video.Snippet.ChannelId,
-                TwitchId = user.Id
+                TwitchId = Int64.Parse(user.Id)
             };
 
             var youtubeSub = new YoutubeSubscription
@@ -60,7 +61,7 @@ namespace DestinyBot.Modules
             };
             var streamer = new TwitchStreamer
             {
-                Id = user.Id,
+                Id = Int64.Parse(user.Id),
                 Name = user.DisplayName,
                 TwitchSubscriptions = new List<TwitchSubscription> { twitchSub }
             };
