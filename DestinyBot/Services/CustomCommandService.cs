@@ -65,7 +65,8 @@ namespace DestinyBot.Services
 
             using (var context = _services.GetService<DestinyBotContext>())
                 customCommands = context.CustomCommands.ToList();
-
+            await _commands.RemoveModuleAsync(_customModule);
+            
             _customModule = await _commands.CreateModuleAsync(string.Empty, m =>
             {
                 m.AddPrecondition(new NotBlockedPrecondtion());
