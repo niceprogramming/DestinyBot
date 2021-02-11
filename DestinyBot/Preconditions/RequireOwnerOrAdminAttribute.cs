@@ -12,7 +12,7 @@ namespace DestinyBot.Preconditions
             IServiceProvider services)
         {
             var user = context.User as IGuildUser;
-            if (user.GuildPermissions.Administrator ||
+            if (user.GuildPermissions.Administrator || user.GuildPermissions.ManageMessages ||
                 (await context.Client.GetApplicationInfoAsync()).Owner.Username == user.Username)
                 return PreconditionResult.FromSuccess();
 

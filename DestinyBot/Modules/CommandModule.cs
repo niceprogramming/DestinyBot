@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DestinyBot.Preconditions;
 using DestinyBot.Services;
 using Discord;
 using Discord.Commands;
@@ -16,7 +17,7 @@ namespace DestinyBot.Modules
         }
 
         [Command("add")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireOwnerOrAdmin]
         public async Task AddCommand(string name, [Remainder] string content)
         {
             await _customCommandService.AddCommand(name, content);
@@ -25,7 +26,7 @@ namespace DestinyBot.Modules
         }
 
         [Command("update")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireOwnerOrAdmin]
         public async Task UpdateCommand(string name, [Remainder] string content)
         {
             await _customCommandService.UpdateCommand(name, content);
@@ -35,7 +36,7 @@ namespace DestinyBot.Modules
 
 
         [Command("remove")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireOwnerOrAdmin]
         public async Task RemoveCommand(string name)
         {
             await _customCommandService.RemoveCommand(name);
